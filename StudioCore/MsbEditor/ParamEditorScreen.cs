@@ -344,7 +344,7 @@ namespace StudioCore.MsbEditor
                     foreach (PARAM.Row r in _selection.getSelectedRows())
                         _clipboardRows.Add(new PARAM.Row(r));// make a clone
                 }
-                if (_selection.paramSelectionExists() && _clipboardParam == _selection.getActiveParam() && InputTracker.GetControlShortcut(Key.V))
+                if (_clipboardRows.Count > 0 && _clipboardParam == _selection.getActiveParam() && InputTracker.GetControlShortcut(Key.V))
                 {
                     ImGui.OpenPopup("ctrlVPopup");
                 }
@@ -531,15 +531,12 @@ namespace StudioCore.MsbEditor
                 }
                 if (ImGui.Selectable("Submit"))
                 {
-                List<PARAM.Row> rowsToInsert = new List<PARAM.Row>();
-                    if (!_selection.rowSelectionExists())
+                    List<PARAM.Row> rowsToInsert = new List<PARAM.Row>();
+                    foreach (PARAM.Row r in _clipboardRows)
                     {
-                        foreach (PARAM.Row r in _clipboardRows)
-                        {
-                            PARAM.Row newrow = new PARAM.Row(r);// more cloning
-                            newrow.ID = r.ID + offset;
-                            rowsToInsert.Add(newrow);
-                        }
+                        PARAM.Row newrow = new PARAM.Row(r);// more cloning
+                        newrow.ID = r.ID + offset;
+                        rowsToInsert.Add(newrow);
                     }
                     EditorActionManager.ExecuteAction(new AddParamsAction(ParamBank.Params[_clipboardParam], "legacystring", rowsToInsert, false));
                 }

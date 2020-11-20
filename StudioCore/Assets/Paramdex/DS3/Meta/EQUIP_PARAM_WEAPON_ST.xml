@@ -222,6 +222,10 @@
 	<isThrustAttackType AltName="Type Display - Thrust" Wiki="Display Thrust as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
 	<isEnhance AltName="Is Buffable" Wiki="Determines whether this weapon can be buffed via SpEffects." />
 	<isCustom AltName="Is Reinforceable" Wiki="Determines whether this weapon can be reinforced." />
+    <baseChangeCategory AltName="Infusion A" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
+    <isDragonSlayer AltName="Infusion B" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
+    <isDeposit AltName="Infusion C" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
+    <disableMultiDropShare AltName="Infusion D" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
 	<wepAbsorpPosId Refs="WepAbsorpPosParam" AltName="Sheath Position ID" Wiki="This determines what Sheath Position ID to use." />
 	<Unk12 AltName="Poise Health Multiplier" Wiki="Determines the multiplier to apply to Toughness (when applied via InvokeToughness in TAE)." />
 	<Unk14 AltName="Is Paired Weapon" Wiki="This determines whether the item is a paired weapon.\nEffects include enabling the L1 moveset when 2 handing and changing the animation played when 2 handing.\nThis animation can be changed or reverted in HKS." />
