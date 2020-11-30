@@ -29,7 +29,7 @@ namespace StudioCore.MsbEditor
             ContextActionManager = manager;
         }
 
-        private bool PropertyRow(Type typ, object oldval, out object newval, Entity obj=null, string propname=null)
+        private bool PropertyRow(Type typ, object oldval, out object newval, bool u8IsBool, Entity obj=null, string propname=null)
         {
             if (typ == typeof(long))
             {
@@ -103,6 +103,16 @@ namespace StudioCore.MsbEditor
             else if (typ == typeof(byte))
             {
                 byte val = (byte)oldval;
+                if (u8IsBool)
+                {
+                    bool checkVal = val > 0;
+                    if (ImGui.Checkbox("##valueBool", ref checkVal))
+                    {
+                        newval = (byte) (checkVal ? 1 : 0);
+                        return true;
+                    }
+                    ImGui.SameLine();
+                }
                 string strval = $@"{val}";
                 if (ImGui.InputText("##value", ref strval, 3))
                 {
@@ -357,6 +367,7 @@ namespace StudioCore.MsbEditor
             ParamEnum Enum = cellMeta == null ? null : cellMeta.EnumType;
             string AltName = cellMeta == null ? null : cellMeta.AltName;
             string Wiki = cellMeta == null ? null : cellMeta.Wiki;
+            bool IsBool = cellMeta == null ? false : cellMeta.IsBool;
             object newval = null;
             ImGui.PushID(id);
             ImGui.AlignTextToFramePadding();
@@ -366,41 +377,39 @@ namespace StudioCore.MsbEditor
             else
             {
                 ImGui.TextColored(new Vector4(0.85f, 0.85f, 1.0f, 1.0f), printedName);
-                PropertyRowWikiContextMenu(Wiki);
             }
+            PropertyRowNameContextMenu(Wiki);
             if (RefTypes != null)
                 ImGui.TextColored(new Vector4(1.0f, 1.0f, 0.0f, 1.0f), @$"  <{String.Join(',', RefTypes)}>");
             if (Enum != null)
                 ImGui.TextColored(new Vector4(1.0f, 1.0f, 0.0f, 1.0f), @$"  {Enum.name}");
+            //PropertyRowMetaDefContextMenu();
             ImGui.NextColumn();
             ImGui.SetNextItemWidth(-1);
             bool changed = false;
 
             if (RefTypes != null || VirtualRef != null || Enum != null)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.5f, 1.0f, 1.0f));
-            changed = PropertyRow(propType, oldval, out newval, nullableEntity, nullableName);
+            changed = PropertyRow(propType, oldval, out newval, IsBool, nullableEntity, nullableName);
             bool committed = ImGui.IsItemDeactivatedAfterEdit();
             if (RefTypes != null || VirtualRef != null || Enum != null)
                 ImGui.PopStyleColor();
-            
-            if (RefTypes != null)// && propType == typeof(int))
-            {
-                changed |= PropertyRowRefs(RefTypes, oldval, ref newval);
-            }
+            PropertyRowValueContextMenu(visualName);
+
+            if (RefTypes != null)
+                PropertyRowRefs(RefTypes, oldval);
             if (Enum != null)
-            {
-                changed |= PropertyRowEnum(Enum, oldval, ref newval);
-            }
-            if (VirtualRef != null)
-            {
-                PropertyRowVirtualRefContextMenu(visualName, VirtualRef, oldval);
-            }
+                ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), Enum.values.GetValueOrDefault(oldval.ToString(), "Not Enumerated"));
+            
+            changed |= PropertyRowMetaValueContextMenu(oldval, ref newval, RefTypes, VirtualRef, Enum);
+
             UpdateProperty(proprow, nullableSelection, paramRowOrCell, newval, changed, committed, false, false);
             ImGui.NextColumn();
             ImGui.PopID();
             id++;
         }
-        private bool PropertyRowRefs(List<string> reftypes, dynamic oldval, ref object newval)
+        
+        private void PropertyRowRefs(List<string> reftypes, dynamic oldval)
         {
             // Add named row and context menu
             // Lists located params
@@ -417,118 +426,127 @@ namespace StudioCore.MsbEditor
                     }
                 }
             }
-            // Attach context menu
-            return PropertyRowRefsContextMenu(reftypes, oldval, ref newval);
         }
-        private bool PropertyRowEnum(ParamEnum en, object oldval, ref object newval)
+        private void PropertyRowNameContextMenu(string wiki)
         {
-            // Add named row and context menu
-            ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), en.values.GetValueOrDefault(oldval.ToString(), "Not Enumerated"));
-            // Attach context menu
-            return PropertyRowEnumContextMenu(en, oldval, ref newval);
-        }
-        private void PropertyRowWikiContextMenu(string wiki)
-        {
-            if (ImGui.BeginPopupContextItem("Wiki"))
+            if ( wiki == null)
+                return;
+            if (ImGui.BeginPopupContextItem("rowName"))
             {
-                ImGui.Text(wiki);
+                if (wiki != null)
+                    ImGui.Text(wiki);
                 ImGui.EndPopup();
             }
         }
-        private bool PropertyRowRefsContextMenu(List<string> reftypes, dynamic oldval, ref object newval)
+        private void PropertyRowValueContextMenu(string visualName)
         {
-            if (ImGui.BeginPopupContextItem(String.Join(',', reftypes)))
-            {   
-                // Add Goto statements
-                foreach (string rt in reftypes)
+            if (ImGui.BeginPopupContextItem("quickMEdit"))
+            {
+                if (ImGui.Selectable("Edit all selected..."))
                 {
-                    if (!ParamBank.Params.ContainsKey(rt))
-                    {
-                        continue;
-                    }
-                    if (ParamBank.Params[rt][(int) oldval] != null && ImGui.Selectable($@"Go to {rt}"))
-                    {   
-                        EditorCommandQueue.AddCommand($@"param/select/{rt}/{oldval}");
-                    }
-                }
-                // Add searchbar for named editing
-                ImGui.InputText("##value", ref _refContextCurrentAutoComplete, 128);
-                // Unordered scanthrough search for matching param entries.
-                // This should be replaced by a proper search box with a scroll and everything
-                if (_refContextCurrentAutoComplete != "")
-                {
-                    foreach (string rt in reftypes)
-                    {
-                        int maxResultsPerRefType = 15/reftypes.Count;
-                        List<PARAM.Row> rows = MassParamEditRegex.GetMatchingParamRowsByName(ParamBank.Params[rt], _refContextCurrentAutoComplete, true, false);
-                        foreach (PARAM.Row r in rows)
-                        {
-                            if (maxResultsPerRefType <= 0)
-                                break;
-                            if (ImGui.Selectable(r.Name))
-                            {
-                                newval = (int) r.ID;
-                                _refContextCurrentAutoComplete = "";
-                                ImGui.EndPopup();
-                                return true;
-                            }
-                            maxResultsPerRefType--;
-                        }
-                    }
+                    EditorCommandQueue.AddCommand($@"param/menu/massEditRegex/selection: {visualName}: ");
                 }
                 ImGui.EndPopup();
+            }
+        }
+        private bool PropertyRowMetaValueContextMenu(object oldval, ref object newval, List<string> RefTypes, string VirtualRef, ParamEnum Enum)
+        {
+            if (RefTypes == null && VirtualRef == null && Enum == null)
+                return false;
+            bool result = false;
+            if (ImGui.BeginPopupContextItem("rowMetaValue"))
+            {
+                if (RefTypes != null)
+                    result |= PropertyRowRefsContextItems(RefTypes, oldval, ref newval);
+                if (VirtualRef != null)
+                    PropertyRowVirtualRefContextItems(VirtualRef, oldval);
+                if (Enum != null)
+                    result |= PropertyRowEnumContextItems(Enum, oldval, ref newval);
+                ImGui.EndPopup();
+            }
+            return result;
+        }
+
+        private bool PropertyRowRefsContextItems(List<string> reftypes, dynamic oldval, ref object newval)
+        { 
+            // Add Goto statements
+            foreach (string rt in reftypes)
+            {
+                if (!ParamBank.Params.ContainsKey(rt))
+                {
+                    continue;
+                }
+                if (ParamBank.Params[rt][(int) oldval] != null && ImGui.Selectable($@"Go to {rt}"))
+                {   
+                    EditorCommandQueue.AddCommand($@"param/select/{rt}/{oldval}");
+                }
+            }
+            // Add searchbar for named editing
+            ImGui.InputText("##value", ref _refContextCurrentAutoComplete, 128);
+            // Unordered scanthrough search for matching param entries.
+            // This should be replaced by a proper search box with a scroll and everything
+            if (_refContextCurrentAutoComplete != "")
+            {
+                foreach (string rt in reftypes)
+                {
+                    int maxResultsPerRefType = 15/reftypes.Count;
+                    List<PARAM.Row> rows = MassParamEditRegex.GetMatchingParamRowsByName(ParamBank.Params[rt], _refContextCurrentAutoComplete, true, false);
+                    foreach (PARAM.Row r in rows)
+                    {
+                        if (maxResultsPerRefType <= 0)
+                            break;
+                        if (ImGui.Selectable(r.Name))
+                        {
+                            newval = (int) r.ID;
+                            _refContextCurrentAutoComplete = "";
+                            return true;
+                        }
+                        maxResultsPerRefType--;
+                    }
+                }
             }
             return false;
         }
-        private void PropertyRowVirtualRefContextMenu(string field, string vref, object searchValue)
+        private void PropertyRowVirtualRefContextItems(string vref, object searchValue)
         {
-            if (ImGui.BeginPopupContextItem(vref))
-            {   
-                // Add Goto statements
-                foreach (var param in ParamBank.Params)
-                {
-                    PARAMDEF.Field foundfield = null;
-                    foreach (PARAMDEF.Field f in param.Value.AppliedParamdef.Fields)
-                    { 
-                        if (FieldMetaData.Get(f).VirtualRef != null && FieldMetaData.Get(f).VirtualRef.Equals(vref))
+            // Add Goto statements
+            foreach (var param in ParamBank.Params)
+            {
+                PARAMDEF.Field foundfield = null;
+                foreach (PARAMDEF.Field f in param.Value.AppliedParamdef.Fields)
+                { 
+                    if (FieldMetaData.Get(f).VirtualRef != null && FieldMetaData.Get(f).VirtualRef.Equals(vref))
+                    {
+                        foundfield = f;
+                        break;
+                    }
+                }
+                if (foundfield == null)
+                    continue;
+                if (ImGui.Selectable($@"Go to first in {param.Key}"))
+                {   
+                    foreach (PARAM.Row row in param.Value.Rows)
+                    {
+                        if (row[foundfield.InternalName].Value.Equals(searchValue))
                         {
-                            foundfield = f;
+                            EditorCommandQueue.AddCommand($@"param/select/{param.Key}/{row.ID}");
                             break;
                         }
                     }
-                    if (foundfield == null)
-                        continue;
-                    if (ImGui.Selectable($@"Go to first in {param.Key}"))
-                    {   
-                        foreach (PARAM.Row row in param.Value.Rows)
-                        {
-                            if (row[foundfield.InternalName].Value.Equals(searchValue))
-                            {
-                                EditorCommandQueue.AddCommand($@"param/select/{param.Key}/{row.ID}");
-                                break;
-                            }
-                        }
-                    }
                 }
-                ImGui.EndPopup();
             }
         }
-        private bool PropertyRowEnumContextMenu(ParamEnum en, object oldval, ref object newval)
+        private bool PropertyRowEnumContextItems(ParamEnum en, object oldval, ref object newval)
         {
             try
             {
-                if (ImGui.BeginPopupContextItem(en.name))
+                foreach (KeyValuePair<string, string> option in en.values)
                 {
-                    foreach (KeyValuePair<string, string> option in en.values)
+                    if (ImGui.Selectable($"{option.Key}: {option.Value}"))
                     {
-                        if (ImGui.Selectable($"{option.Key}: {option.Value}"))
-                        {
-                            newval = Convert.ChangeType(option.Key, oldval.GetType());
-                            ImGui.EndPopup();
-                            return true;
-                        }
+                        newval = Convert.ChangeType(option.Key, oldval.GetType());
+                        return true;
                     }
-                    ImGui.EndPopup();
                 }
             }
             catch
@@ -722,7 +740,7 @@ namespace StudioCore.MsbEditor
                                 bool changed = false;
                                 object newval = null;
 
-                                changed = PropertyRow(typ.GetElementType(), oldval, out newval);
+                                changed = PropertyRow(typ.GetElementType(), oldval, out newval, false);
                                 // PropertyContextMenu(prop);
                                 if (ImGui.IsItemActive() && !ImGui.IsWindowFocused())
                                 {
@@ -772,7 +790,7 @@ namespace StudioCore.MsbEditor
                                 bool changed = false;
                                 object newval = null;
 
-                                changed = PropertyRow(arrtyp, oldval, out newval);
+                                changed = PropertyRow(arrtyp, oldval, out newval, false);
                                 PropertyContextMenu(obj, prop);
                                 if (ImGui.IsItemActive() && !ImGui.IsWindowFocused())
                                 {
@@ -871,7 +889,7 @@ namespace StudioCore.MsbEditor
                         bool changed = false;
                         object newval = null;
 
-                        changed = PropertyRow(typ, oldval, out newval, selection, prop.Name);
+                        changed = PropertyRow(typ, oldval, out newval, false, selection, prop.Name);
                         PropertyContextMenu(obj, prop);
                         if (ImGui.IsItemActive() && !ImGui.IsWindowFocused())
                         {

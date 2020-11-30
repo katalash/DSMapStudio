@@ -118,6 +118,11 @@ namespace StudioCore.MsbEditor
         /// </summary>
         public string Wiki {get; set;}
 
+        /// <summary>
+        /// Is this u8 field actually a boolean?
+        /// </summary>
+        public bool IsBool {get; set;}
+
         public static FieldMetaData Get(PARAMDEF.Field def)
         {
             return _FieldMetas[def];
@@ -163,6 +168,11 @@ namespace StudioCore.MsbEditor
             if (WikiText != null)
             {
                 Wiki = WikiText.InnerText.Replace("\\n", "\n");
+            }
+            XmlAttribute IsBoolean = fieldMeta.Attributes["IsBool"];
+            if (IsBoolean != null)
+            {
+                IsBool = true;
             }
         }
     }

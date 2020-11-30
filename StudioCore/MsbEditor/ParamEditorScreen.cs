@@ -206,9 +206,6 @@ namespace StudioCore.MsbEditor
 
         public override void DrawEditorMenu()
         {
-            bool openMEditRegex = false;
-            bool openMEditCSVExport = false;
-            bool openMEditCSVImport = false;
             // Menu Options
             if (ImGui.BeginMenu("Edit"))
             {
@@ -241,39 +238,29 @@ namespace StudioCore.MsbEditor
                 {
                     if (ImGui.MenuItem("Mass Edit", null, false, true))
                     {
-                        openMEditRegex = true;
+                        EditorCommandQueue.AddCommand($@"param/menu/massEditRegex");
                     }
                     if (ImGui.MenuItem("Export CSV (Slow!)", null, false, _selection.paramSelectionExists()))
                     {
-                        openMEditCSVExport = true;
+                        EditorCommandQueue.AddCommand($@"param/menu/massEditCSVExport");
                     }
                     if (ImGui.MenuItem("Import CSV", null, false, _selection.paramSelectionExists()))
                     {
-                        openMEditCSVImport = true;
+                        EditorCommandQueue.AddCommand($@"param/menu/massEditCSVImport");
                     }
                 }
                 ImGui.EndMenu();
             }
-            // Menu Popups -- imgui scoping
-            if (openMEditRegex)
-            {
-                ImGui.OpenPopup("massEditMenuRegex");
-                _isMEditPopupOpen = true;
-            }
-            if (openMEditCSVExport)
-            {
-                if (_selection.paramSelectionExists())
-                    _currentMEditCSVOutput = MassParamEditCSV.GenerateCSV(ParamBank.Params[_selection.getActiveParam()]);
-                ImGui.OpenPopup("massEditMenuCSVExport");
-                _isMEditPopupOpen = true;
-            }
-            if (openMEditCSVImport)
-            {
-                ImGui.OpenPopup("massEditMenuCSVImport");
-                _isMEditPopupOpen = true;
-            }
-            MassEditPopups();
         }
+
+        public void OpenMassEditPopup(string popup, string massEditText)
+        {
+            if (massEditText != null)
+                _currentMEditRegexInput = massEditText;
+            ImGui.OpenPopup(popup);
+            _isMEditPopupOpen = true;
+        }
+
         public void MassEditPopups()
         {
             // Popup size relies on magic numbers. Multiline maxlength is also arbitrary.
@@ -380,29 +367,50 @@ namespace StudioCore.MsbEditor
 
             bool doFocus = false;
             // Parse select commands
-            if (initcmd != null && initcmd[0] == "select")
+            if (initcmd != null)
             {
-                if (initcmd.Length > 1 && ParamBank.Params.ContainsKey(initcmd[1]))
+                if (initcmd[0] == "select")
                 {
-                    doFocus = true;
-                    _selection.setActiveParam(initcmd[1]);
-                    if (initcmd.Length > 2)
+                    if (initcmd.Length > 1 && ParamBank.Params.ContainsKey(initcmd[1]))
                     {
-                        _selection.SetActiveRow(null);
-                        var p = ParamBank.Params[_selection.getActiveParam()];
-                        int id;
-                        var parsed = int.TryParse(initcmd[2], out id);
-                        if (parsed)
+                        doFocus = true;
+                        _selection.setActiveParam(initcmd[1]);
+                        if (initcmd.Length > 2)
                         {
-                            var r = p.Rows.FirstOrDefault(r => r.ID == id);
-                            if (r != null)
+                            _selection.SetActiveRow(null);
+                            var p = ParamBank.Params[_selection.getActiveParam()];
+                            int id;
+                            var parsed = int.TryParse(initcmd[2], out id);
+                            if (parsed)
                             {
-                                _selection.SetActiveRow(r);
+                                var r = p.Rows.FirstOrDefault(r => r.ID == id);
+                                if (r != null)
+                                {
+                                    _selection.SetActiveRow(r);
+                                }
                             }
                         }
                     }
                 }
+                else if (initcmd[0] == "menu" && initcmd.Length > 1)
+                {
+                    if (initcmd[1] == "massEditRegex")
+                    {
+                        OpenMassEditPopup("massEditMenuRegex", initcmd.Length > 2 ? initcmd[2] : null);
+                    }
+                    else if (initcmd[1] == "massEditCSVExport")
+                    {
+                        if (_selection.paramSelectionExists())
+                            _currentMEditCSVOutput = MassParamEditCSV.GenerateCSV(ParamBank.Params[_selection.getActiveParam()]);
+                        OpenMassEditPopup("massEditMenuCSVExport", null);
+                    }
+                    else if (initcmd[1] == "massEditCSVImport")
+                    {
+                        OpenMassEditPopup("massEditMenuCSVImport", null);
+                    }
+                }
             }
+            MassEditPopups();
 
             ImGui.Columns(3);
             ImGui.BeginChild("params");
