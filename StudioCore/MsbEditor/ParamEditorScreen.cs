@@ -324,14 +324,14 @@ namespace StudioCore.MsbEditor
                 {
                     EditorActionManager.RedoAction();
                 }
-                if (InputTracker.GetControlShortcut(Key.C))
+                if (!ImGui.IsAnyItemActive() && InputTracker.GetControlShortcut(Key.C))
                 {
                     _clipboardParam = _selection.getActiveParam();
                     _clipboardRows.Clear();
                     foreach (PARAM.Row r in _selection.getSelectedRows())
                         _clipboardRows.Add(new PARAM.Row(r));// make a clone
                 }
-                if (_clipboardRows.Count > 0 && _clipboardParam == _selection.getActiveParam() && InputTracker.GetControlShortcut(Key.V))
+                if (_clipboardRows.Count > 0 && _clipboardParam == _selection.getActiveParam() && !ImGui.IsAnyItemActive() && InputTracker.GetControlShortcut(Key.V))
                 {
                     ImGui.OpenPopup("ctrlVPopup");
                 }
