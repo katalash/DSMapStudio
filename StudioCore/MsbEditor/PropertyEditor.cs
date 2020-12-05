@@ -401,7 +401,11 @@ namespace StudioCore.MsbEditor
             if (Enum != null)
                 ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), Enum.values.GetValueOrDefault(oldval.ToString(), "Not Enumerated"));
             
-            changed |= PropertyRowMetaValueContextMenu(oldval, ref newval, RefTypes, VirtualRef, Enum);
+            if (PropertyRowMetaValueContextMenu(oldval, ref newval, RefTypes, VirtualRef, Enum))
+            {
+                changed = true;
+                committed = true;
+            }
 
             UpdateProperty(proprow, nullableSelection, paramRowOrCell, newval, changed, committed, false, false);
             ImGui.NextColumn();

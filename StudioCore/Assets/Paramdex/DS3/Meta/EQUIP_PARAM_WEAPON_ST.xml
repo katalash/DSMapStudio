@@ -205,43 +205,68 @@
 	<toxicGuardResist AltName="Guard - Toxic Resistance" Wiki="The Toxic resistance this item will have while guarding" />
 	<bloodGuardResist AltName="Guard - Blled Resistance" Wiki="The Bleed resistance this item will have while guarding" />
 	<curseGuardResist AltName="Guard - Curse Resistance" Wiki="The Curse resistance this item will have while guarding. This will not affect the Basilisk's curse mist." />
-	<rightHandEquipable Wiki="Determines whether this item can be equipped in right hand slots." />
-	<leftHandEquipable Wiki="Determines whether this item can be equipped in left hand slots." />
-	<bothHandEquipable Wiki="This value determines whether this item can be 2 handed." />
-	<arrowSlotEquipable Wiki="Determines whether this item can be equipped in the arrow slots." />
-	<boltSlotEquipable Wiki="Determines whether this item can be equipped in the bolt slots." />
-	<enableGuard Wiki="Determines whether this weapon can guard (requires TAE support for actual effect)." />
-	<enableParry Wiki="Determines whether this weapon can parry (requires TAE support for actual effect)." />
-	<enableMagic Wiki="Determines whether this weapon can cast Sorceries\nRequires HKS or TAE support for actual effect." />
-	<enablePyromancy Wiki="Determines whether this weapon can cast Pyromancies\nRequires HKS or TAE support for actual effect." />
-	<enableMiracle Wiki="Determines whether this weapon can cast Miracles\nRequires HKS or TAE support for actual effect." />
-	<enableVowMagic AltName="Enable Covenant Spells" Wiki="Determines whether this weapon can cast Covenant spells.\nRequires HKS or TAE support for actual effect." />
-	<isNormalAttackType AltName="Type Display - Normal" Wiki="Display Standard as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
-	<isBlowAttackType AltName="Type Display - Strike" Wiki="Display Strike as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
-	<isSlashAttackType AltName="Type Display - Slash" Wiki="Display Slash as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
-	<isThrustAttackType AltName="Type Display - Thrust" Wiki="Display Thrust as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
-	<isEnhance AltName="Is Buffable" Wiki="Determines whether this weapon can be buffed via SpEffects." />
-	<isCustom AltName="Is Reinforceable" Wiki="Determines whether this weapon can be reinforced." />
+	<rightHandEquipable IsBool="" Wiki="Determines whether this item can be equipped in right hand slots." />
+	<leftHandEquipable IsBool="" Wiki="Determines whether this item can be equipped in left hand slots." />
+	<bothHandEquipable IsBool="" Wiki="This value determines whether this item can be 2 handed." />
+	<arrowSlotEquipable IsBool="" Wiki="Determines whether this item can be equipped in the arrow slots." />
+	<boltSlotEquipable IsBool="" Wiki="Determines whether this item can be equipped in the bolt slots." />
+	<enableGuard IsBool="" Wiki="Determines whether this weapon can guard (requires TAE support for actual effect)." />
+	<enableParry IsBool="" Wiki="Determines whether this weapon can parry (requires TAE support for actual effect)." />
+	<enableMagic IsBool="" Wiki="Determines whether this weapon can cast Sorceries\nRequires HKS or TAE support for actual effect." />
+	<enablePyromancy IsBool="" Wiki="Determines whether this weapon can cast Pyromancies\nRequires HKS or TAE support for actual effect." />
+	<enableMiracle IsBool="" Wiki="Determines whether this weapon can cast Miracles\nRequires HKS or TAE support for actual effect." />
+	<enableVowMagic IsBool="" AltName="Enable Covenant Spells" Wiki="Determines whether this weapon can cast Covenant spells.\nRequires HKS or TAE support for actual effect." />
+	<isNormalAttackType IsBool="" AltName="Type Display - Normal" Wiki="Display Standard as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
+	<isBlowAttackType IsBool="" AltName="Type Display - Strike" Wiki="Display Strike as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
+	<isSlashAttackType IsBool="" AltName="Type Display - Slash" Wiki="Display Slash as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
+	<isThrustAttackType IsBool="" AltName="Type Display - Thrust" Wiki="Display Thrust as the damage type in the weapon menu.\nActual type is defined in BehaviorParam_PC." />
+	<isEnhance IsBool="" AltName="Is Buffable" Wiki="Determines whether this weapon can be buffed via SpEffects." />
+	<isLuckCorrect IsBool="" />
+	<isCustom IsBool="" AltName="Is Reinforceable" Wiki="Determines whether this weapon can be reinforced." />
+	<disableBaseChangeReset IsBool="" />
+	<disableRepair IsBool="" />
+	<isDarkHand IsBool="" />
+	<simpleModelForDlc IsBool="" />
+	<ubyteLanternWep IsBool="" />
+	<isVersusGhostWep IsBool="" />
     <baseChangeCategory AltName="Infusion A" IsBool="" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
     <isDragonSlayer AltName="Infusion B" IsBool="" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
     <isDeposit AltName="Infusion C" IsBool="" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
     <disableMultiDropShare AltName="Infusion D" IsBool="" Wiki="Infusion A/B/C/D determines infusion icon and availability.\nFFFF Normal\nTFFF Heavy\nFTFF Sharp\nTTFF Refined\nFFTF Crystal\nTFTF Simple\nFTTF Fire\nTTTF Chaos\nFFFT Lightning\nTFFT Deep\nFTFT Dark\nTTFT Poison\nFFTT Blood\nTFTT Raw\nFTTT Blessed\nTTTT Hollow" />
+	<Bool1 IsBool="" />
+	<Bool2 IsBool="" />
+	<DisableShoot IsBool="" />
+	<EnableRepository IsBool="" />
+	<DisableMultiDropShare2 IsBool="" />
+	<IsDiscard IsBool="" />
+	<IsDrop IsBool="" />
+	<Bool3 IsBool="" />
+	<Bool4 IsBool="" />
+	<Bool5 IsBool="" />
+	<Bool6 IsBool="" />
+	<Bool7 IsBool="" />
 	<wepAbsorpPosId Refs="WepAbsorpPosParam" AltName="Sheath Position ID" Wiki="This determines what Sheath Position ID to use." />
 	<Unk12 AltName="Poise Health Multiplier" Wiki="Determines the multiplier to apply to Toughness (when applied via InvokeToughness in TAE)." />
-	<Unk14 AltName="Is Paired Weapon" Wiki="This determines whether the item is a paired weapon.\nEffects include enabling the L1 moveset when 2 handing and changing the animation played when 2 handing.\nThis animation can be changed or reverted in HKS." />
-	<IsAutoEquip Wiki="Automatically equips the item when picked up, if slots are empty." />
+	<Unk13 IsBool="" />
+	<Unk14 IsBool="" AltName="Is Paired Weapon" Wiki="This determines whether the item is a paired weapon.\nEffects include enabling the L1 moveset when 2 handing and changing the animation played when 2 handing.\nThis animation can be changed or reverted in HKS." />
+	<IsAutoEquip IsBool="" Wiki="Automatically equips the item when picked up, if slots are empty." />
+	<Unk16 IsBool="" />
+	<Unk17 IsBool="" />
+	<Unk18 IsBool="" />
+	<Unk19 IsBool="" />
+	<Unk20 IsBool="" />
 	<Unk21 Refs="CalcCorrectGraph" AltName="Correction Type - Magic" Wiki="Determines the stat graph used for Magic damage (i.e. how effective a stat is)." />
 	<Unk22 Refs="CalcCorrectGraph" AltName="Correction Type - Fire" Wiki="Determines the stat graph used for Fire damage (i.e. how effective a stat is)." />
 	<Unk23 Refs="CalcCorrectGraph" AltName="Correction Type - Lightning" Wiki="Determines the stat graph used for Lightning damage (i.e. how effective a stat is)."/>
 	<darkGuardCutRate AltName="Guard - Dark Defense" Wiki="The Dark absorption to use when guarding." />
 	<atkBaseDark AltName="Damage - Dark" Wiki="The base Dark damage.\nNote that this is multiplied by reinforcement (via ReinforceParamWeapon)." />
-	<Unk26 AltName="Correction Type - Dark" Wiki="Determines the stat graph used for Dark damage (i.e. how effective a stat is)." />
+	<Unk26 Refs="CalcCorrectGraph" AltName="Correction Type - Dark" Wiki="Determines the stat graph used for Dark damage (i.e. how effective a stat is)." />
 	<swordArt_ActId AltName="Weapon Art Anim ID" />
 	<Unk30 AltName="Damage Penalty" />
 	<Unk31 AltName="Guard - Frostbite resistance" Wiki="The Frost resistance to use when guarding." />
 	<swordArtId Refs="SwordArtsParam" Wiki="Determines the SwordArtsParam ID to use." />
 	<correctLuck AltName="Luck Scaling" Wiki="The base scaling value used for Luck.\nNote that this is multiplied by reinforcement (via ReinforceParamWeapon)." />
-	<displayTypeId Enum="DisplayType" />
+	<displayTypeId Enum="DisplayType" AltName="Weapon Class" Wiki="This is the weapon class displayed in the in-game menu." />
 	<weaponVfx0 AltName="1 - Weapon Vfx ID" Wiki="Vfx ID to apply" />
 	<weaponVfx1 AltName="2 - Weapon Vfx ID" Wiki="Vfx ID to apply" />
 	<weaponVfx2 AltName="3 - Weapon Vfx ID" Wiki="Vfx ID to apply" />
@@ -254,14 +279,14 @@
 	<attackElementCorrectId Refs="AttackElementCorrectParam" />
     <shopPrice AltName="Shop - Buy Price" Wiki="The soul cost of the weapon in a shop." />
 	<Unk62 AltName="Reinforcement Menu Type" />  
-    <WepSpMask0 AltName="1 - Is Sheath Weapon Enable" />
-	<WepSpMask1 AltName="2 - Is Sheath Weapon Enable" />
-	<WepSpMask2 AltName="3 - Is Sheath Weapon Enable" />
-	<WepSpMask3 AltName="4 - Is Sheath Weapon Enable" />
-	<WepSpMask4 AltName="1 - Weapon Absorption Position" />
-	<WepSpMask5 AltName="2 - Weapon Absorption Position" />
-	<WepSpMask6 AltName="3 - Weapon Absorption Position" />
-	<WepSpMask7 AltName="4 - Weapon Absorption Position" />
+    <WepSpMask0 IsBool="" AltName="1 - Is Sheath Weapon Enable" />
+	<WepSpMask1 IsBool="" AltName="2 - Is Sheath Weapon Enable" />
+	<WepSpMask2 IsBool="" AltName="3 - Is Sheath Weapon Enable" />
+	<WepSpMask3 IsBool="" AltName="4 - Is Sheath Weapon Enable" />
+	<WepSpMask4 IsBool="" AltName="1 - Weapon Absorption Position" />
+	<WepSpMask5 IsBool="" AltName="2 - Weapon Absorption Position" />
+	<WepSpMask6 IsBool="" AltName="3 - Weapon Absorption Position" />
+	<WepSpMask7 IsBool="" AltName="4 - Weapon Absorption Position" />
     <Unk65 AltName="TAE Sound Event - Sound Type" />
 	<Unk66 AltName="Infusion Price" />
 	<SpEff9600 AltName="Multiplayer Weapon Adjustment" />
