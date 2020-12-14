@@ -175,7 +175,9 @@ namespace StudioCore.MsbEditor
         // Clipboard vars
         private string _clipboardParam = null;
         private List<PARAM.Row> _clipboardRows = new List<PARAM.Row>();
-        private string _currentCtrlVInput = "0";
+        private long _clipboardBaseRow = 0;
+        private string _currentCtrlVValue = "0";
+        private string _currentCtrlVOffset = "0";
 
         // MassEdit Popup vars
         private string _currentMEditRegexInput = "";
@@ -324,12 +326,34 @@ namespace StudioCore.MsbEditor
                 {
                     EditorActionManager.RedoAction();
                 }
-                if (!ImGui.IsAnyItemActive() && InputTracker.GetControlShortcut(Key.C))
+                if (!ImGui.IsAnyItemActive() && _selection.paramSelectionExists() && InputTracker.GetControlShortcut(Key.A))
+                {
+                    _clipboardParam = _selection.getActiveParam();
+                    Match m = new Regex(MassParamEditRegex.rowfilterRx).Match(_selection.getCurrentSearchString());
+                    if (!m.Success)
+                    {
+                        foreach(PARAM.Row row in ParamBank.Params[_selection.getActiveParam()].Rows)
+                            _selection.addRowToSelection(row);
+                    }
+                    else
+                    {
+                        foreach(PARAM.Row row in MassParamEditRegex.GetMatchingParamRows(ParamBank.Params[_selection.getActiveParam()], m, true, true))
+                            _selection.addRowToSelection(row);
+                    }
+                }
+                if (!ImGui.IsAnyItemActive() && _selection.rowSelectionExists() && InputTracker.GetControlShortcut(Key.C))
                 {
                     _clipboardParam = _selection.getActiveParam();
                     _clipboardRows.Clear();
+                    long baseValue = long.MaxValue;
                     foreach (PARAM.Row r in _selection.getSelectedRows())
+                    {
                         _clipboardRows.Add(new PARAM.Row(r));// make a clone
+                        if (r.ID < baseValue)
+                            baseValue = r.ID;
+                    }
+                    _clipboardBaseRow = baseValue;
+                    _currentCtrlVValue = _clipboardBaseRow.ToString();
                 }
                 if (_clipboardRows.Count > 0 && _clipboardParam == _selection.getActiveParam() && !ImGui.IsAnyItemActive() && InputTracker.GetControlShortcut(Key.V))
                 {
@@ -526,11 +550,23 @@ namespace StudioCore.MsbEditor
         {
             if (ImGui.BeginPopup("ctrlVPopup"))
             {
-                ImGui.InputText("Offset", ref _currentCtrlVInput, 20);
                 long offset = 0;
                 try
                 {
-                    offset = int.Parse(_currentCtrlVInput);
+                    ImGui.InputText("Row", ref _currentCtrlVValue, 20);
+                    if (ImGui.IsItemDeactivatedAfterEdit())
+                    {
+                        offset = long.Parse(_currentCtrlVValue) - _clipboardBaseRow;
+                        _currentCtrlVOffset = offset.ToString();
+                    }
+                    ImGui.InputText("Offset", ref _currentCtrlVOffset, 20);
+                    if (ImGui.IsItemDeactivatedAfterEdit())
+                    {
+                        offset = long.Parse(_currentCtrlVOffset);
+                        _currentCtrlVValue = (_clipboardBaseRow + offset).ToString();
+                    }
+                    // Recheck that this is valid
+                    offset = long.Parse(_currentCtrlVOffset);
                 }
                 catch
                 {

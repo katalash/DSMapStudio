@@ -47,7 +47,7 @@ namespace StudioCore.MsbEditor
             }
             catch
             {
-                
+
             }
 
             if (typ == typeof(long))
@@ -447,7 +447,7 @@ namespace StudioCore.MsbEditor
                     }
                     if (r == null)
                         continue;
-                    if (r.Name == null)
+                    if (r.Name == null || r.Name.Equals(""))
                     {
                         ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), "Unnamed Row");
                     }
