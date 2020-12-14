@@ -420,13 +420,27 @@ namespace StudioCore.MsbEditor
             ImGui.NewLine();
             foreach (string rt in reftypes)
             {
+                string hint = "";
                 if (ParamBank.Params.ContainsKey(rt))
                 {
                     PARAM.Row r = ParamBank.Params[rt][(int) oldval];
-                    if (r != null && r.Name != null)
+                    ImGui.SameLine();
+                    if (r == null && (int) oldval > 0)
                     {
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), r.Name);
+                        // Test if previous row exists. In future, add param meta to determine size of offset
+                        int altval = (int) oldval - (int) oldval % 100;
+                        r = ParamBank.Params[rt][altval];
+                        hint = $@"(+{(int) oldval % 100})";
+                    }
+                    if (r == null)
+                        continue;
+                    if (r.Name == null)
+                    {
+                        ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), "Unnamed Row");
+                    }
+                    else
+                    {
+                        ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), r.Name + hint);
                     }
                 }
             }
@@ -480,9 +494,15 @@ namespace StudioCore.MsbEditor
                 {
                     continue;
                 }
-                if (ParamBank.Params[rt][(int) oldval] != null && ImGui.Selectable($@"Go to {rt}"))
+                int searchVal = (int) oldval;
+                if (ParamBank.Params[rt][(int) searchVal] == null && searchVal > 0)
+                    {
+                        // Test if previous row exists. In future, add param meta to determine size of offset
+                        searchVal = (int) oldval - (int) oldval % 100;
+                    }
+                if (ParamBank.Params[rt][searchVal] != null && ImGui.Selectable($@"Go to {rt}"))
                 {   
-                    EditorCommandQueue.AddCommand($@"param/select/{rt}/{oldval}");
+                    EditorCommandQueue.AddCommand($@"param/select/{rt}/{searchVal}");
                 }
             }
             // Add searchbar for named editing
