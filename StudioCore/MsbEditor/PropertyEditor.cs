@@ -427,6 +427,7 @@ namespace StudioCore.MsbEditor
             // Add named row and context menu
             // Lists located params
             ImGui.NewLine();
+            bool entryFound = false;
             foreach (string rt in reftypes)
             {
                 string hint = "";
@@ -447,6 +448,7 @@ namespace StudioCore.MsbEditor
                     }
                     if (r == null)
                         continue;
+                    entryFound = true;
                     if (r.Name == null || r.Name.Equals(""))
                     {
                         ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), "Unnamed Row");
@@ -456,6 +458,10 @@ namespace StudioCore.MsbEditor
                         ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), r.Name + hint);
                     }
                 }
+            }
+            if (!entryFound)
+            {
+                ImGui.TextColored(new Vector4(0.0f, 0.0f, 0.0f, 1.0f), "___");
             }
         }
         private void PropertyRowNameContextMenu(string wiki)
@@ -473,6 +479,7 @@ namespace StudioCore.MsbEditor
         {
             if (ImGui.BeginPopupContextItem("quickMEdit"))
             {
+                Console.WriteLine("OI");
                 if (ImGui.Selectable("Edit all selected..."))
                 {
                     EditorCommandQueue.AddCommand($@"param/menu/massEditRegex/selection: {visualName}: ");
