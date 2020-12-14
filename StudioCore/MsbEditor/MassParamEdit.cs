@@ -329,10 +329,10 @@ namespace StudioCore.MsbEditor
 
     public class MassParamEditCSV : MassParamEdit
     {
-        public static string GenerateCSV(PARAM param)
+        public static string GenerateCSV(List<PARAM.Row> rows)
         {
             string gen = "";
-            foreach (PARAM.Row row in param.Rows)
+            foreach (PARAM.Row row in rows)
             {
                 string rowgen = $@"{row.ID},{row.Name}";
                 foreach (PARAM.Cell cell in row.Cells)

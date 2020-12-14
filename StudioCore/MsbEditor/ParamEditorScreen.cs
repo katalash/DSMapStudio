@@ -240,7 +240,7 @@ namespace StudioCore.MsbEditor
                     {
                         EditorCommandQueue.AddCommand($@"param/menu/massEditRegex");
                     }
-                    if (ImGui.MenuItem("Export CSV (Slow!)", null, false, _selection.paramSelectionExists()))
+                    if (ImGui.MenuItem("Export CSV", null, false, _selection.paramSelectionExists()))
                     {
                         EditorCommandQueue.AddCommand($@"param/menu/massEditCSVExport");
                     }
@@ -400,8 +400,8 @@ namespace StudioCore.MsbEditor
                     }
                     else if (initcmd[1] == "massEditCSVExport")
                     {
-                        if (_selection.paramSelectionExists())
-                            _currentMEditCSVOutput = MassParamEditCSV.GenerateCSV(ParamBank.Params[_selection.getActiveParam()]);
+                        if (_selection.rowSelectionExists())
+                            _currentMEditCSVOutput = MassParamEditCSV.GenerateCSV(_selection.getSelectedRows());
                         OpenMassEditPopup("massEditMenuCSVExport", null);
                     }
                     else if (initcmd[1] == "massEditCSVImport")
