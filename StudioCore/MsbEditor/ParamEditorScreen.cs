@@ -554,18 +554,19 @@ namespace StudioCore.MsbEditor
                 try
                 {
                     ImGui.InputText("Row", ref _currentCtrlVValue, 20);
-                    if (ImGui.IsItemDeactivatedAfterEdit())
+                    if (ImGui.IsItemEdited())
                     {
-                        offset = long.Parse(_currentCtrlVValue) - _clipboardBaseRow;
+                        offset = (long) ulong.Parse(_currentCtrlVValue) - _clipboardBaseRow;
                         _currentCtrlVOffset = offset.ToString();
                     }
                     ImGui.InputText("Offset", ref _currentCtrlVOffset, 20);
-                    if (ImGui.IsItemDeactivatedAfterEdit())
+                    if (ImGui.IsItemEdited())
                     {
                         offset = long.Parse(_currentCtrlVOffset);
                         _currentCtrlVValue = (_clipboardBaseRow + offset).ToString();
                     }
                     // Recheck that this is valid
+                    offset = (long) ulong.Parse(_currentCtrlVValue);
                     offset = long.Parse(_currentCtrlVOffset);
                 }
                 catch
