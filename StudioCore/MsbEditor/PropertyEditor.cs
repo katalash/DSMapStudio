@@ -29,8 +29,27 @@ namespace StudioCore.MsbEditor
             ContextActionManager = manager;
         }
 
-        private bool PropertyRow(Type typ, object oldval, out object newval, bool u8IsBool, Entity obj=null, string propname=null)
+        private bool PropertyRow(Type typ, object oldval, out object newval, bool isBool, Entity obj=null, string propname=null)
         {
+            try
+            {
+                if (isBool)
+                {
+                    dynamic val = oldval;
+                    bool checkVal = val > 0;
+                    if (ImGui.Checkbox("##valueBool", ref checkVal))
+                    {
+                        newval = Convert.ChangeType(checkVal ? 1 : 0, oldval.GetType());
+                        return true;
+                    }
+                    ImGui.SameLine();
+                }
+            }
+            catch
+            {
+                
+            }
+
             if (typ == typeof(long))
             {
                 long val = (long)oldval;
@@ -103,16 +122,6 @@ namespace StudioCore.MsbEditor
             else if (typ == typeof(byte))
             {
                 byte val = (byte)oldval;
-                if (u8IsBool)
-                {
-                    bool checkVal = val > 0;
-                    if (ImGui.Checkbox("##valueBool", ref checkVal))
-                    {
-                        newval = (byte) (checkVal ? 1 : 0);
-                        return true;
-                    }
-                    ImGui.SameLine();
-                }
                 string strval = $@"{val}";
                 if (ImGui.InputText("##value", ref strval, 3))
                 {

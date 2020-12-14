@@ -66,11 +66,22 @@ namespace StudioCore.MsbEditor
                 enums.Add(en.name, en);
             }
  
+            Dictionary<string, int> nameCount = new Dictionary<string, int>();
             foreach (PARAMDEF.Field f in def.Fields)
             {
                 try
                 {
-                    XmlNode pairedNode = root.SelectSingleNode($"Field/{Regex.Replace(f.InternalName, @"[^a-zA-Z0-9_]", "")}");
+                    string name = Regex.Replace(f.InternalName, @"[^a-zA-Z0-9_]", "");
+                    if (Regex.IsMatch(name, $@"^\d"))
+                    {
+                        name = "_" + name;
+                    }
+                    int c = nameCount.GetValueOrDefault(name, 0);
+                    XmlNodeList nodes = root.SelectNodes($"Field/{name}");
+                    //XmlNode pairedNode = root.SelectSingleNode($"Field/{}");
+                    XmlNode pairedNode = nodes[c];
+                    nameCount[name] = c + 1;
+
                     if (pairedNode == null)
                     {
                         new FieldMetaData(f);
