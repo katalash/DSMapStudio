@@ -427,10 +427,14 @@ namespace StudioCore.MsbEditor
                     ImGui.SameLine();
                     if (r == null && (int) oldval > 0)
                     {
-                        // Test if previous row exists. In future, add param meta to determine size of offset
-                        int altval = (int) oldval - (int) oldval % 100;
-                        r = ParamBank.Params[rt][altval];
-                        hint = $@"(+{(int) oldval % 100})";
+                        ParamMetaData meta = ParamMetaData.Get(ParamBank.Params[rt].AppliedParamdef);
+                        if (meta != null && meta.OffsetSize > 0)
+                        {
+                            // Test if previous row exists. In future, add param meta to determine size of offset
+                            int altval = (int) oldval - (int) oldval % meta.OffsetSize;
+                            r = ParamBank.Params[rt][altval];
+                            hint = $@"(+{(int) oldval % meta.OffsetSize})";
+                        }
                     }
                     if (r == null)
                         continue;
@@ -496,10 +500,14 @@ namespace StudioCore.MsbEditor
                 }
                 int searchVal = (int) oldval;
                 if (ParamBank.Params[rt][(int) searchVal] == null && searchVal > 0)
+                {
+                    ParamMetaData meta = ParamMetaData.Get(ParamBank.Params[rt].AppliedParamdef);
+                    if (meta != null && meta.OffsetSize > 0)
                     {
                         // Test if previous row exists. In future, add param meta to determine size of offset
-                        searchVal = (int) oldval - (int) oldval % 100;
+                        searchVal = (int) oldval - (int) oldval % meta.OffsetSize;
                     }
+                }
                 if (ParamBank.Params[rt][searchVal] != null && ImGui.Selectable($@"Go to {rt}"))
                 {   
                     EditorCommandQueue.AddCommand($@"param/select/{rt}/{searchVal}");

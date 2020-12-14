@@ -17,6 +17,11 @@ namespace StudioCore.MsbEditor
 
         private const int XML_VERSION = 0;
 
+        /// <summary>
+        /// Max value of trailing digits used for offset, +1
+        /// </summary>
+        public int OffsetSize {get; set;}
+
         public static ParamMetaData Get(PARAMDEF def)
         {
             return _ParamMetas[def];
@@ -44,6 +49,16 @@ namespace StudioCore.MsbEditor
                 throw new InvalidDataException($"Mismatched XML version; current version: {XML_VERSION}, file version: {xmlVersion}");
             }
             Add(def, this);
+            
+            XmlNode self = root.SelectSingleNode("Self");
+            if (self != null)
+            {
+                XmlAttribute Off = self.Attributes["OffsetSize"];
+                if (Off != null)
+                {
+                    OffsetSize = int.Parse(Off.InnerText);
+                }
+            }
 
             foreach (XmlNode node in root.SelectNodes("Enums/Enum"))
             {
