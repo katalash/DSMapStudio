@@ -332,12 +332,12 @@ namespace StudioCore.MsbEditor
                     Match m = new Regex(MassParamEditRegex.rowfilterRx).Match(_selection.getCurrentSearchString());
                     if (!m.Success)
                     {
-                        foreach(PARAM.Row row in ParamBank.Params[_selection.getActiveParam()].Rows)
+                        foreach (PARAM.Row row in ParamBank.Params[_selection.getActiveParam()].Rows)
                             _selection.addRowToSelection(row);
                     }
                     else
                     {
-                        foreach(PARAM.Row row in MassParamEditRegex.GetMatchingParamRows(ParamBank.Params[_selection.getActiveParam()], m, true, true))
+                        foreach (PARAM.Row row in MassParamEditRegex.GetMatchingParamRows(ParamBank.Params[_selection.getActiveParam()], m, true, true))
                             _selection.addRowToSelection(row);
                     }
                 }

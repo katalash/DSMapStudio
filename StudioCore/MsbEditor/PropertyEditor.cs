@@ -479,7 +479,6 @@ namespace StudioCore.MsbEditor
         {
             if (ImGui.BeginPopupContextItem("quickMEdit"))
             {
-                Console.WriteLine("OI");
                 if (ImGui.Selectable("Edit all selected..."))
                 {
                     EditorCommandQueue.AddCommand($@"param/menu/massEditRegex/selection: {visualName}: ");
