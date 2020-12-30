@@ -17,12 +17,12 @@ The selector may be 'selection: FIELD' to indicate that you wish to edit all cur
 It may also be 'param PARAM: ' to select by a specific param followed by any of the following row selectors:
     'id VALUE: ' to select rows by their ids,
     'name NAME: ' to select rows with a matching name,
-    'prop FIELD VALUE: ' to select rows that have a field that matches the given value,
-    'propref FIELD NAME: ' to select rows that have a field that is a reference to a row with a matching name.
+    'prop FIELD VALUE: ' to select rows that have a field that matches the given value. FIELD must be exact.
+    'propref FIELD NAME: ' to select rows that have a field that is a reference to a row with a matching name. FIELD must be exact.
 And finally followed with 'FIELD: ' to indicate the field you wish to change.
 
 An operation is given by 'OP VALUE;'
-VALUE is either a given number or 'field NAME;', indicating the value to be used is read from the given field (per row)
+VALUE is either a given number or 'field NAME;', indicating the value to be used is read from the given field (per row).
 The valid values of OP are:
     '=' assigns the value to the field
     '*' multiplies the current value of the field by the given value
@@ -43,13 +43,13 @@ Searches are case-insensitive and the searched term may appear anywhere in the t
 The following options determine how rows a filtered:
     'id VALUE' to select rows by their ids,
     'name NAME' to select rows with a matching name,
-    'prop FIELD VALUE' to select rows that have a field that matches the given value,
-    'propref FIELD NAME' to select rows that have a field that is a reference to a row with a matching name.
+    'prop FIELD VALUE' to select rows that have a field that matches the given value. FIELD must be exact.
+    'propref FIELD NAME' to select rows that have a field that is a reference to a row with a matching name. FIELD must be exact.
 
 A complete search may look like the following DS3 examples:
 id 10000
-name Dagger.*
-propref originEquipWep Dagger.*";
+name Dagger
+propref originEquipWep0 Dagger";
 
         public static void AddImGuiHintButton(string hint)
         {

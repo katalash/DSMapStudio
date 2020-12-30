@@ -227,7 +227,7 @@ namespace StudioCore.MsbEditor
             else if (rowpropfield.Success)
                 return GetMatchingParamRowsByPropVal(param, rowpropfield.Value, command.Groups["rowpropvalexp"].Value, lenient, failureAllOrNone);
             else if (rowpropreffield.Success)
-                return GetMatchingParamRowsByPropRef(param, rowpropreffield.Value, $@"^{command.Groups["rowproprefnamerx"].Value}$", lenient, failureAllOrNone);
+                return GetMatchingParamRowsByPropRef(param, rowpropreffield.Value, command.Groups["rowproprefnamerx"].Value, lenient, failureAllOrNone);
             else
                 return failureAllOrNone ? param.Rows : new List<PARAM.Row>();
         }
@@ -302,20 +302,21 @@ namespace StudioCore.MsbEditor
                 foreach (PARAM.Row row in param.Rows)
                 {
                     PARAM.Cell c = row[rowfield];
-                    if (c != null)
+                    if (c == null)
+                        continue;
+                    int val = (int) c.Value;
+                    foreach (string rt in FieldMetaData.Get(c.Def).RefTypes)
                     {
-                        int val = (int) c.Value;
-                        foreach (string rt in FieldMetaData.Get(c.Def).RefTypes)
+                        if (!ParamBank.Params.ContainsKey(rt))
+                            continue;
+                        PARAM.Row r = ParamBank.Params[rt][val];
+                        if (r==null)
+                            continue;
+                        string nameToMatch = r.Name == null ? "" : r.Name;
+                        if (r != null && rownamerx.Match(lenient ? nameToMatch.ToLower() : nameToMatch).Success)
                         {
-                            if (!ParamBank.Params.ContainsKey(rt))
-                                continue;
-                            PARAM.Row r = ParamBank.Params[rt][val];
-                            string nameToMatch = r.Name == null ? "" : r.Name;
-                            if (r != null && rownamerx.Match(lenient ? nameToMatch.ToLower() : nameToMatch).Success)
-                            {
-                                rlist.Add(row);
-                                break;
-                            }
+                            rlist.Add(row);
+                            break;
                         }
                     }
                 }
