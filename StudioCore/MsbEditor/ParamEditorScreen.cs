@@ -268,8 +268,8 @@ namespace StudioCore.MsbEditor
             // Popup size relies on magic numbers. Multiline maxlength is also arbitrary.
             if (ImGui.BeginPopup("massEditMenuRegex"))
             {
-                ImGui.Text("selection: FIELD: ((=|+|-|*|/) VALUE | ref ROW);");
-                ImGui.Text("param PARAM: (id VALUE | name ROW | prop FIELD VALUE | propref FIELD ROW): FIELD: ((=|+|-|*|/) VALUE | ref ROW);");
+                ImGui.Text("param PARAM: id VALUE: FIELD: = VALUE;");
+                UIHints.AddImGuiHintButton(UIHints.MassEditHint);
                 ImGui.InputTextMultiline("MEditRegexInput", ref _currentMEditRegexInput, 65536, new Vector2(1024, 256));
                 if (ImGui.Selectable("Submit", false, ImGuiSelectableFlags.DontClosePopups))
                 {
@@ -462,6 +462,7 @@ namespace StudioCore.MsbEditor
                 if (FeatureFlags.EnableEnhancedParamEditor)
                 {
                     ImGui.Text("id VALUE | name ROW | prop FIELD VALUE | propref FIELD ROW");
+                    UIHints.AddImGuiHintButton(UIHints.SearchBarHint);
                     ImGui.InputText("Search rows...", ref _selection.getCurrentSearchString(), 256);
                     if(ImGui.IsItemActive())
                         _isSearchBarActive = true;
