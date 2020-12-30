@@ -129,7 +129,7 @@ namespace StudioCore.MsbEditor
         // eg "correctFaith: "
         private static readonly string fieldRx = $@"(?<fieldrx>[^\:]+):\s+";
         // eg "* 2;
-        private static readonly string operationRx = $@"(?<op>=|\+|-|\*|/|ref)\s+(?<opparam>[^;]+);";
+        private static readonly string operationRx = $@"(?<op>=|\+|-|\*|/|ref)\s+(?<fieldtype>field\s+)?(?<opparam>[^;]+);";
 
         private static readonly Regex commandRx = new Regex($@"^({paramrowfilterselection}|({paramfilterRx}{rowfilterRx}:\s+)){fieldRx}{operationRx}$");
 
@@ -146,6 +146,7 @@ namespace StudioCore.MsbEditor
                     Group paramrx = comm.Groups["paramrx"];
                     Regex fieldRx = new Regex($@"^{comm.Groups["fieldrx"].Value}$");
                     string op = comm.Groups["op"].Value;
+                    bool isopparamField = comm.Groups["fieldtype"].Success;
                     string opparam = comm.Groups["opparam"].Value;
                     
                     List<PARAM> affectedParams = new List<PARAM>();
@@ -162,17 +163,33 @@ namespace StudioCore.MsbEditor
                         else
                             affectedRows.AddRange(GetMatchingParamRows(param, comm, false, false));
                     }
-
-                    List<PARAM.Cell> affectedCells = GetMatchingCells(affectedRows, fieldRx);
-                    changeCount += affectedCells.Count;
-                    foreach (PARAM.Cell cell in affectedCells)
+                    foreach (PARAM.Row row in affectedRows)
                     {
-                        object newval = PerformOperation(cell, op, opparam);
-                        if (newval == null)
+                        List<PARAM.Cell> affectedCells = GetMatchingCells(row, fieldRx);
+                        string opparamcontext = opparam;
+                        if (isopparamField)
                         {
-                            return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not perform operation {op} {opparam} on field {cell.Def.DisplayName}");
+                            foreach (PARAM.Cell cell in row.Cells)
+                            {
+                                if (cell.Def.InternalName.Equals(opparam))
+                                {
+                                    opparamcontext = cell.Value.ToString();
+                                    break;
+                                }
+                            }
+                            if (opparamcontext.Equals(opparam))
+                                return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not look up field {opparam} in row {row.Name}");
                         }
-                        actions.Add(new PropertiesChangedAction(cell.GetType().GetProperty("Value"), -1, cell, newval));
+                        changeCount += affectedCells.Count;
+                        foreach (PARAM.Cell cell in affectedCells)
+                        {
+                            object newval = PerformOperation(cell, op, opparamcontext);
+                            if (newval == null)
+                            {
+                                return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not perform operation {op} {opparamcontext} on field {cell.Def.DisplayName}");
+                            }
+                            actions.Add(new PropertiesChangedAction(cell.GetType().GetProperty("Value"), -1, cell, newval));
+                        }
                     }
                 }
                 else
@@ -310,17 +327,14 @@ namespace StudioCore.MsbEditor
             }
         }
 
-        public static List<PARAM.Cell> GetMatchingCells(List<PARAM.Row> rows, Regex fieldrx)
+        public static List<PARAM.Cell> GetMatchingCells(PARAM.Row row, Regex fieldrx)
         {
             List<PARAM.Cell> clist = new List<PARAM.Cell>();
-            foreach (PARAM.Row row in rows)
+            foreach (PARAM.Cell c in row.Cells)
             {
-                foreach (PARAM.Cell c in row.Cells)
+                if (fieldrx.Match(c.Def.DisplayName).Success)
                 {
-                    if (fieldrx.Match(c.Def.DisplayName).Success)
-                    {
-                        clist.Add(c);
-                    }
+                    clist.Add(c);
                 }
             }
             return clist;
