@@ -237,11 +237,11 @@ namespace StudioCore.MsbEditor
             List<PARAM.Row> rlist = new List<PARAM.Row>();
             try
             {
-                Regex rx = new Regex(rowvalexp);
+                Regex rx = lenient? new Regex($@".*{rowvalexp}.*") : new Regex(rowvalexp);
                 foreach (PARAM.Row row in param.Rows)
                 {
-                    string term = lenient ? $@".*{row.ID.ToString()}.*" : row.ID.ToString();
-                    if (rx.Match(term).Success)
+                    string term = row.ID.ToString();
+                    if (rx.Match(lenient ? term.ToLower() : term).Success)
                         rlist.Add(row);
                 }
                 return rlist;
@@ -277,12 +277,12 @@ namespace StudioCore.MsbEditor
             List<PARAM.Row> rlist = new List<PARAM.Row>();
             try
             {
-                Regex rx = new Regex(rowvalexp);
+                Regex rx = lenient ? new Regex($@".*{rowvalexp.ToLower()}.*") : new Regex(rowvalexp);
                 foreach (PARAM.Row row in param.Rows)
                 {
-                    PARAM.Cell c = row[rowfield];
-                    string term = lenient ? $@".*{c.Value.ToString()}.*" : c.Value.ToString();
-                    if (c != null && rx.Match(term).Success)
+                    PARAM.Cell c = row[rowfield.Replace(@"\s", " ")];
+                    string term = c.Value.ToString();
+                    if (c != null && rx.Match(lenient ? term.ToLower() : term).Success)
                         rlist.Add(row);
                 }
                 return rlist;
@@ -301,7 +301,7 @@ namespace StudioCore.MsbEditor
                 Regex rownamerx = lenient ? new Regex($@".*{namerx.ToLower()}.*") : new Regex(namerx);
                 foreach (PARAM.Row row in param.Rows)
                 {
-                    PARAM.Cell c = row[rowfield];
+                    PARAM.Cell c = row[rowfield.Replace(@"\s", " ")];
                     if (c == null)
                         continue;
                     int val = (int) c.Value;
