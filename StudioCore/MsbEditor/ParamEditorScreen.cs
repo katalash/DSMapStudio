@@ -362,9 +362,20 @@ namespace StudioCore.MsbEditor
                     string name = view._selection.rowSelectionExists() ? view._selection.getActiveRow().Name : null;
                     string toDisplay = (view == _activeView ? "*" : "") + (name == null || name.Trim().Equals("") ? "Param Editor View" : name);
                     ImGui.Begin($@"{toDisplay}###ParamEditorView##{view._viewIndex}");
-                    view.ParamView(doFocus);
-                    if (ImGui.IsWindowFocused())
+                    if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
                         _activeView = view;
+                    if (ImGui.BeginPopupContextItem())
+                    {
+                        if (ImGui.MenuItem("Close View"))
+                        {
+                            _views.Remove(view);
+                            if (_activeView == view)
+                                _activeView = _views.Last();
+                            break;
+                        }
+                        ImGui.EndMenu();
+                    }
+                    view.ParamView(doFocus && view == _activeView);
                     ImGui.End();
                 }
             }
