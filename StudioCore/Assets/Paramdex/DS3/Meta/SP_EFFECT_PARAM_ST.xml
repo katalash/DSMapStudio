@@ -374,39 +374,280 @@
   </Enums>
   <Field>
     <iconId Enum="IconID" />
-    <replaceSpEffectId Refs="SpEffectParam" />
-    <cycleOccurenceSpEffectId Refs="SpEffectParam" />
-    <atkOccurenceSpEffectId Refs="SpEffectParam" />
+	<conditionHp AltName="Trigger on HP Below %" />
+    <effectEndurance AltName="Duration" />
+	<motionInterval AltName="Trigger Interval" />
+	<maxHpRate AltName="Max Health %" />
+	<maxMpRate AltName="Max Focus %" />
+	<maxStaminaCutRate AltName="Max Stamina %" />
+	<slashDamageCutRate AltName="Absorption: Slash" />
+	<blowDamageCutRate AltName="Absorption: Strike" />
+	<thrustDamageCutRate AltName="Absorption: Thrust" />
+	<neutralDamageCutRate AltName="Absorption: Standard" />
+	<magicDamageCutRate AltName="Absorption: Magic" />
+	<fireDamageCutRate AltName="Absorption: Fire" />
+	<thunderDamageCutRate AltName="Absorption: Lightning" />
+	<physAtkRate AltName="Attack %: Physical" />
+	<magicAtkRate AltName="Attack %: Magic" />
+	<fireAtkRate AltName="Attack %: Fire" />
+	<thunderAtkRate AltName="Attack %: Lightning" />
+	<physAtkPowerRate AltName="Power %: Physical" />
+	<magicAtkPowerRate AltName="Power %: Magic" />
+	<fireAtkPowerRate AltName="Power %: Fire" />
+	<thunderAtkPowerRate AltName="Power %: Lightning" />
+	<physAtkPower AltName="Damage +: Physical" />
+	<magicAtkPower AltName="Damage +: Magic" />
+	<fireAtkPower AltName="Damage +: Fire" />
+	<thunderAtkPower AltName="Damage +: Lighting" />
+	<physDefRate AltName="Defence %: Physical" />
+	<magicDefRate AltName="Defence %: Magic" />
+	<fireDefRate AltName="Defence %: Fire" />
+	<thunderDefRate AltName="Defence %: Lightning" />
+	<physDef AltName="Defence +: Physical" />
+	<magicDef AltName="Defence +: Magic" />
+	<fireDef AltName="Defence +: Fire" />
+	<thunderDef AltName="Defence +: Lightning" />
+	<noGuardDamageRate AltName="No Guard Damage %" />
+	<vitalSpotChangeRate AltName="Vital Spot Change %" />
+	<normalSpotChangeRate AltName="Normal Spot Change %" />
+	<maxHpChangeRate AltName="Max HP Change %" />
+	<behaviorId Wiki="NPC Behavior - Requires State Info 142\nPlayer Behavior - Requires State Info 275\nBullet Behavior - Requires State Info 334" />
+	<changeHpRate AltName="Change HP %" />
+	<changeHpPoint AltName="Change HP +" />
+	<changeMpRate AltName="Change FP %" />
+	<changeMpPoint AltName="Change FP +" />
+	<mpRecoverChangeSpeed AltName="FP Recovery" />
+	<changeStaminaRate AltName="Change SP %" />
+	<changeStaminaPoint AltName="Change SP +" />
+	<staminaRecoverChangeSpeed AltName="SP Recovery" />
+	<insideDurability AltName="Change Durability" Wiki="Requires State Info 4" />
+	<maxDurability />
+	<staminaAttackRate AltName="Attack %: Stamina" />
+	<registPoison AltName="Inflict Poison +" Wiki="Requires State Info 2" />
+	<registToxic AltName="Inflict Toxic +" Wiki="Requires State Info 5" />
+	<registBlood AltName="Inflict Blood +" Wiki="Requires State Info 6" />
+	<registCurse AltName="Inflict Curse +" Wiki="Requires State Info 116" />
+	<fallDamageRate AltName="Fall Damage %" />
+	<soulRate AltName="Add Souls %" Wiki="Requires State Info 76" />
+	<equipWeightChangeRate AltName="Equip Load %" />
+	<allItemWeightChangeRate AltName="Item Weight %" />
+	<soul AltName="Add Souls +" />
+	<haveSoulRate AltName="Have Souls %" Wiki="Possibly from cut DS2 dark spells - effect may be Trigger if souls %"/>
+	<targetPriority Wiki="Requires State Info 46" />
+	<sightSearchEnemyCut AltName="Enemy Sight Reduction" Wiki="Requires State Info 8" />
+	<hearingSearchEnemyCut AltName="Enemy Listen Reduction" Wiki="Requires State Info 54" />
+	<gravityRate AltName="Gravity %" />
+	<registPoisonChangeRate AltName="Resist %: Poison" />
+	<registToxicChangeRate AltName="Resist %: Toxic" />
+	<registBloodChangeRate AltName="Resist %: Bleed" />
+	<registCurseChangeRate AltName="Resist %: Curse" />
+	<soulStealRate AltName="Soul Steal %" />
+	<lifeReductionRate AltName="Effect Duration %" Wiki="Multiplier applied to the duration of the effect specified in lifeReductionType/Effect Duration Multiplier Type." />
+	<hpRecoverRate AltName="HP Recovery Effectiveness %" Wiki="Multiplier applied to any increase in character's current HP." />
+	<replaceSpEffectId Refs="SpEffectParam" AltName="Expiration SpEffect ID" />
+	<cycleOccurenceSpEffectId Refs="SpEffectParam" AltName="Cycle Occurance SpEffect ID" />
+	<atkOccurenceSpEffectId Refs="SpEffectParam" AltName="Attack Occurance Effect ID" Wiki="Player - Requires State Info 153\nEnemies - Requires State Info 152" />
+	<guardDefFlickPowerRate AltName="Guard Defense Flick Power %" />
+	<guardStaminaCutRate AltName="Stability %" />
+	<changeSuperArmorPoint AltName="Poise +" Wiki="Requires State Info 155" />
+	<bowDistRate AltName="Bow Distance %" Wiki="Requires State Info 168" />
 	<spCategory Enum="EffectCategory" />
-    <dmgLv_None Enum="DamageLevel" />
-    <dmgLv_S Enum="DamageLevel" />
-    <dmgLv_M Enum="DamageLevel" />
-    <dmgLv_L Enum="DamageLevel" />
-    <dmgLv_BlowM Enum="DamageLevel" />
-    <dmgLv_Push Enum="DamageLevel" />
-    <dmgLv_Strike Enum="DamageLevel" />
-    <dmgLv_BlowS Enum="DamageLevel" />
-    <dmgLv_Min Enum="DamageLevel" />
-    <dmgLv_Uppercut Enum="DamageLevel" />
-    <dmgLv_BlowLL Enum="DamageLevel" />
-    <dmgLv_Breath Enum="DamageLevel" />
+	<categoryPriority Wiki="Priority ordering for special effect to be applied on each update (lower values are updated first)." />
+	<saveCategory Wiki="Determines automatic game saving behavior (used for status ailments only). Set to -1 for no saving." />
+	<changeMagicSlot AltName="Magic Attunement Slot" />
+	<changeMiracleSlot AltName="Miracle Attunement Slot" />
+	<heroPointDamage AltName="Humanity Damage" />
+	<flickDamageCutRate AltName="Flick Absorption %" />
+	<bloodDamageRate AltName="Bleed Damage Taken %" />
+	<dmgLv_None Enum="DamageLevel" AltName="Damage Level: No Impact" />
+	<dmgLv_S Enum="DamageLevel" AltName="Damage Level: Small Impact" />
+	<dmgLv_M Enum="DamageLevel" AltName="Damage Level: Medium Impact" />
+	<dmgLv_L Enum="DamageLevel" AltName="Damage Level: Large Impact" />
+	<dmgLv_BlowM Enum="DamageLevel" AltName="Damage Level: Blowoff" />
+	<dmgLv_Push Enum="DamageLevel" AltName="Damage Level: Push" />
+	<dmgLv_Strike Enum="DamageLevel" AltName="Damage Level: Strike" />
+	<dmgLv_BlowS Enum="DamageLevel" AltName="Damage Level: Blow" />
+	<dmgLv_Min Enum="DamageLevel" AltName="Damage Level: Minimal" />
+	<dmgLv_Uppercut Enum="DamageLevel" AltName="Damage Level: Launch" />
+	<dmgLv_BlowLL Enum="DamageLevel" AltName="Damage Level: Blow Backward" />
+	<dmgLv_Breath Enum="DamageLevel" AltName="Damage Level: Breath" />
 	<atkAttribute Enum="AttackAttribute" />
 	<spAttribute Enum="EffectCategory" />
-	<stateInfo Enum="StateInfo" />
 	<wepParamChange Enum="WeaponParamChange" />
 	<moveType Enum="MoveType" />
-	<throwCondition Enum="ThrowTrigger" />
-    <EffectVfx0 Refs="SpEffectVfxParam" />
-    <stateSpEffect0 Refs="SpEffectParam" />
-    <stateSpEffect1 Refs="SpEffectParam" />
-    <stateSpEffect2 Refs="SpEffectParam" />
-    <stateSpEffect3 Refs="SpEffectParam" />
-    <EffectVfx1 Refs="SpEffectVfxParam" />
-    <EffectVfx2 Refs="SpEffectVfxParam" />
-    <EffectVfx3 Refs="SpEffectVfxParam" />
-    <EffectVfx4 Refs="SpEffectVfxParam" />
-    <EffectVfx5 Refs="SpEffectVfxParam" />
-    <EffectVfx6 Refs="SpEffectVfxParam" />
-    <EffectVfx7 Refs="SpEffectVfxParam" />
+	<lifeReductionType AltName="Effect Duration Multiplier Type" Wiki="Type of effect whose duration is affected by Effect Duration Multiplier. Known values:\n2 = poison\n5 = toxic" />
+	<throwCondition Enum="ThrowTrigger" AltName="Throw Trigger" />
+	<addBehaviorJudgeId_condition AltName="Add Behavior Judge ID - Trigger" />
+	<addBehaviorJudgeId_add AltName="Add Behavior Judge ID" />
+	<effectTargetSelf IsBool="" />
+	<effectTargetFriend IsBool="" />
+	<effectTargetEnemy IsBool="" />
+	<effectTargetPlayer IsBool="" />
+	<effectTargetAI IsBool="" />
+	<effectTargetLive IsBool="" />
+	<effectTargetGhost IsBool="" />
+	<effectTargetWhiteGhost IsBool="" />
+	<effectTargetBlackGhost IsBool="" />
+	<effectTargetAttacker IsBool="" />
+	<dispIconNonactive AltName="Display Icon when Inactive" IsBool="" />
+	<useSpEffectEffect AltName="Use Visual Effect" Wiki="Use visual effect from State Info Visuals table" IsBool="" />
+	<bAdjustMagicAbility AltName="Use Intelligence Scaling" Wiki="Scales certain fields based on spell buff derived from current INT." IsBool="" />
+	<bAdjustFaithAbility AltName="Use Faith Scaling" Wiki="Scales certain fields based on spell buff derived from current FTH." IsBool="" />
+	<bGameClearBonus AltName="Enable in NG+" Wiki="Enables the effect if in NG+" IsBool="" />
+	<magParamChange AltName="Affects Sorcery" IsBool="" />
+	<miracleParamChange AltName="Affects Miracles" IsBool="" />
+	<clearSoul AltName="Clear Held Souls" IsBool="" />
+	<requestSos AltName="Request: White Phantom Summon" IsBool="" />
+	<requestBlackSos AltName="Request: Red Phantom Summon" IsBool="" />
+	<requestForceJoinBlackSos AltName="Request: Invasion" IsBool="" />
+	<requestKickSession AltName="Request: Kick" IsBool="" />
+	<requestLeaveSession AltName="Request: Return to Own World" IsBool="" />
+	<requestNpcInvade AltName="Request: NPC Invasion" IsBool="" />
+	<noDead AltName="Is Immortal" Wiki="If true, character cannot die." IsBool="" />
+	<bCurrHPIndependeMaxHP AltName="Current HP ignore Max HP" IsBool="" />
+	<corrosionIgnore AltName="Ignore Durability Loss" IsBool="" />
+	<sightSearchCutIgnore AltName="Ignore Sight Reductions" IsBool="" />
+	<hearingSearchCutIgnore AltName="Ignore Listen Reductions" IsBool="" />
+	<antiMagicIgnore AltName="Ignore Anti-Magic Effect" IsBool="" />
+	<fakeTargetIgnore AltName="Ignore Fake Targets" IsBool="" />
+	<fakeTargetIgnoreUndead AltName="Ignore Fake Undead Targets" IsBool="" />
+	<fakeTargetIgnoreAnimal AltName="Ignore Fake Animal Targets" IsBool="" />
+	<gravityIgnore AltName="Ignore Gravity" IsBool="" />
+	<disablePoison IsBool="" />
+	<disableToxic IsBool="" />
+	<disableBlood IsBool="" />
+	<disableCurse IsBool="" />
+	<enableCharm IsBool="" />
+	<enableLifeTime IsBool="" />
+	<hasTarget IsBool="" />
+	<isFireDamageCancel AltName="Cancel on Fire Damage" IsBool="" />
+	<isExtendSpEffectLife AltName="Extend Effect Duration" IsBool="" />
+	<requestLeaveColiseumSession AltName="Request: Leave Arena" IsBool="" />
+	<disableFrost IsBool="" />
+	<chargeAttackParamChange IsBool="" />
+	<throwAttackParamChange IsBool="" />
+	<enableEquipSlotCheck IsBool="" />
+	<vowType0 AltName="Trigger for Vow Type 0" IsBool="" />
+	<vowType1 AltName="Trigger for Vow Type 1" IsBool="" />
+	<vowType2 AltName="Trigger for Vow Type 2" IsBool="" />
+	<vowType3 AltName="Trigger for Vow Type 3" IsBool="" />
+	<vowType4 AltName="Trigger for Vow Type 4" IsBool="" />
+	<vowType5 AltName="Trigger for Vow Type 5" IsBool="" />
+	<vowType6 AltName="Trigger for Vow Type 6" IsBool="" />
+	<vowType7 AltName="Trigger for Vow Type 7" IsBool="" />
+	<vowType8 AltName="Trigger for Vow Type 8" IsBool="" />
+	<vowType9 AltName="Trigger for Vow Type 9" IsBool="" />
+	<vowType10 AltName="Trigger for Vow Type 10" IsBool="" />
+	<vowType11 AltName="Trigger for Vow Type 11" IsBool="" />
+	<vowType12 AltName="Trigger for Vow Type 12" IsBool="" />
+	<vowType13 AltName="Trigger for Vow Type 13" IsBool="" />
+	<vowType14 AltName="Trigger for Vow Type 14" IsBool="" />
+	<vowType15 AltName="Trigger for Vow Type 15" IsBool="" />
+	<DamageChangeStateON_OFF IsBool=""/>
+	<Unk1 AltName="Visual Distance Change - AI 1" />
+	<effectTargetOpposeTarget AltName="Trigger for Opponent" IsBool="" />
+	<effectTargetFriendlyTarget AltName="Trigger for Friendly" IsBool="" />
+	<effectTargetSelfTarget AltName="Trigger for Self" IsBool="" />
+	<Unk2 AltName="Trigger for Player" IsBool="" />
+	<Unk3 AltName="Trigger for AI" IsBool="" />
+	<Unk4 AltName="Trigger for Live" IsBool="" />
+	<Unk5 AltName="Trigger for Ghost" IsBool="" />
+	<Unk6 AltName="Trigger for Attacker" IsBool="" />
+	<Unk7 AltName="Team Type" Wiki="Requires State Info 132" />
+	<Unk8 AltName="Bullet Behavior ID - DmyPoly ID" />
+	<EffectVfx0 Refs="SpEffectVfxParam" />
+	<stateSpEffect0 Refs="SpEffectParam" AltName="State Effect 1 - SpEffect" Wiki="StateInfo303-311" />
+	<stateSpEffect1 Refs="SpEffectParam" AltName="State Effect 1 - Condition" Wiki="StateInfo303-311" />
+	<stateSpEffect2 Refs="SpEffectParam" AltName="State Effect 2 - SpEffect" Wiki="StateInfo303-311" />
+	<stateSpEffect3 Refs="SpEffectParam" AltName="State Effect 2 - Condition" Wiki="StateInfo303-311" />
+	<stabilityVal AltName="State Effect Increment" Wiki="StateInfo303-311" />
+	<Unk10 AltName="Visual Distance Change - AI 2/3?" />
+	<EffectVfx1 Refs="SpEffectVfxParam" />
+	<EffectVfx2 Refs="SpEffectVfxParam" />
+	<EffectVfx3 Refs="SpEffectVfxParam" />
+	<EffectVfx4 Refs="SpEffectVfxParam" />
+	<EffectVfx5 Refs="SpEffectVfxParam" />
+	<EffectVfx6 Refs="SpEffectVfxParam" />
+	<EffectVfx7 Refs="SpEffectVfxParam" />
+	<registFrost AltName="Inflict Frost +" Wiki="Requires State Info 260" />
+	<Unk14 AltName="Is Enable Foot Effect Slot" />
+	<poiseRate AltName="Poise %" />
+	<conditionMaxHp AltName="Trigger on HP Above %" />
+	<Unk20 AltName="Weapon Stamina Usage %" />
+	<dropRate AltName="Item Discovery %" Wiki="Requires State Info 66" />
+	<Unk21 AltName="Goal ID to Find" />
+	<PoisonResistChange AltName="Resist: Poison +" />
+	<ToxicResistChange AltName="Resist: Toxic +" />
+	<BleedResistChange AltName="Resist: Bleed +" />
+	<CurseResistChange AltName="Resist: Curse +" />
+	<FrostResistChange AltName="Resist: Frost +" />
+	<poisonAtkRate AltName="Damage %: Poison" />
+	<toxicAtkRate AltName="Damage %: Toxic" />
+	<bleedAtkRate AltName="Damage %: Bleed" />
+	<toxicAtkRate AltName="Damage %: Curse" />
+	<Unk22 AltName="Damage %: Frost" />
+	<slashSpAttackRate AltName="SP Damage %: Slash" />
+	<blowSpAttackRate AltName="SP Damage %: Strike" />
+	<thrustSpAttackRate AltName="SP Damage %: Thrust" />
+	<physSpAttackRate AltName="SP Damage %: Physical" />
+	<magicSpAttackRate AltName="SP Damage %: Magic" />
+	<fireSpAttackRate AltName="SP Damage %: Fire" />
+	<ThunderSpAttackRate AltName="SP Damage %: Lightning" />
+	<DarkSpAttackRate AltName="SP Damage %: Dark" />
+	<playerBaseVal0 AltName="Weapon Arts Points - STR" />
+	<playerBaseVal1 AltName="Weapon Arts Points - DEX" />
+	<playerBaseVal2 AltName="Weapon Arts Points - INT" />
+	<playerBaseVal3 AltName="Weapon Arts Points - FTH" />
+	<Unk23 AltName="Wet Aspect Param Jumptable" Wiki="Requires State Info 281" />
+	<Unk24 AltName="Disable Frostbite" IsBool="" />
+	<useSpValCorrection AltName="Scale with Aux Inflict Correction" IsBool="" />
+	<useDifferentVal AltName="Scale with Flat Damage Correction" IsBool="" />
+	<instaDeath AltName="Scale with Hollowing" IsBool="" />
+	<Unk25 AltName="Cancel on Death" IsBool="" />
+	<Unk26 AltName="Is Trigger on HP Condition" IsBool="" />
+	<Unk27 AltName="Is Disable Compare for SP Attribute" IsBool="" />
+	<DisableMultiPlayUse IsBool="" />
+	<PhysDefCutRateMP AltName="PVP Absorption %: Physical" />
+	<MagicDefCutRateMP AltName="PVP Absorption %: Magic" />
+	<FireDefCutRateMP AltName="PVP Absorption %: Fire" />
+	<ThunderDefCutRateMP AltName="PVP Absorption %: Lightning" />
+	<DarkDefCutRateMP AltName="PVP Absorption %: Dark" />
+	<PhysDefCutRate2 AltName="Absorption %: Physical" />
+	<MagicDefCutRate2 AltName="Absorption %: Magic" />
+	<FireDefCutRate2 AltName="Absorption %: Fire" />
+	<ThunderDefCutRate2 AltName="Absorption %: Lightning" />
+	<DarkDefCutRate2 AltName="Absorption %: Dark" />
+	<Unk36 AltName="Global Weapon Damage %" />
+	<physUnkRate AltName="PVP Damage %: Physical" />
+	<magicUnkRate AltName="PVP Damage %: Magic" />
+	<fireUnkRate AltName="PVP Damage %: Fire" />
+	<thunderUnkRate AltName="PVP Damage %: Lightning" />
+	<darkUnkRate AltName="PVP Damage %: Dark" />
+	<physDamageRate2 AltName="Damage %: Physical" />
+	<magicDamageRate2 AltName="Damage %: Magic" />
+	<fireDamageRate2 AltName="Damage %: Fire" />
+	<thunderDamageRate2 AltName="Damage %: Lightning" />
+	<darkDamageRate2 AltName="Damage %: Dark" />
+	<registFrostChangeRate AltName="Resist %: Frost" />
+	<ConditionHpChange0 Enum="StateInfo" AltName="Trigger on State Info: 0" />
+	<ConditionHpChange1 Enum="StateInfo" AltName="Trigger on State Info: 1" />
+	<ConditionHpChange2 Enum="StateInfo" AltName="Trigger on State Info: 2" />
+	<Unk37 AltName="Affects Pyromancy" />
+	<fakeDexterity_castSpeed AltName="Cast Speed +" />
+	<Unk38 AltName="Purchase Item / Soul Transposition Menu" />
+	<swordArtMpChangeRate AltName="Weapon Skill Cost %" />
+	<magicMpChangeRate AltName="Sorcery Cost %" />
+	<PyroMpChangeRate AltName="Pyromancy Cost %" />
+	<MiracleMpChangeRate AltName="Miracle Cost %" />
+	<subChangeHpRate AltName="Estus HP %" />
+	<subHpPoint AltName="Estus HP +" />
+	<subChangeMpRate AltName="Estus FP %" />
+	<subMpPoint AltName="Estus FP +" />
+	<subHpRestoreRate AltName="Estus HP Restore %" />
+	<subMpRestoreRate AltName="Estus FP Restore %" />
+	<DeathOccurenceSpEffectId Wiki="Requires State Info 199" />
+	<effectEnduranceRate AltName="Effect Duration %" Wiki="Requires State Info 193" />
+	<Unk40 AltName="Add Behavior Judge ID" />
+	<Unk41 AltName="Add Behavior Judge ID - Unk" />
   </Field>
 </PARAMMETA>

@@ -398,8 +398,8 @@ namespace StudioCore.MsbEditor
             object newval = null;
             ImGui.PushID(id);
             ImGui.AlignTextToFramePadding();
-            string printedName = (AltName != null && ParamEditorScreen.ShowAltNamesPreference) ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{visualName} ({AltName})" : $"{AltName}*") : visualName; 
-            ImGui.Text(printedName);
+            string printedName = (AltName != null && ParamEditorScreen.ShowAltNamesPreference) ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{visualName} ({AltName})" : $"{AltName}*") : visualName;
+            ImGui.TextUnformatted(printedName);
             PropertyRowNameContextMenu(visualName);
             if (Wiki != null)
                 UIHints.AddImGuiHintButton(visualName, Wiki);
@@ -539,9 +539,12 @@ namespace StudioCore.MsbEditor
                         searchVal = (int) oldval - (int) oldval % meta.OffsetSize;
                     }
                 }
-                if (ParamBank.Params[rt][searchVal] != null && ImGui.Selectable($@"Go to {rt}"))
+                if (ParamBank.Params[rt][searchVal] != null)
                 {   
-                    EditorCommandQueue.AddCommand($@"param/select/{rt}/{searchVal}");
+                    if (ImGui.Selectable($@"Go to {rt}"))
+                        EditorCommandQueue.AddCommand($@"param/select/-1/{rt}/{searchVal}");
+                    if (ImGui.Selectable($@"Go to {rt} in new view"))
+                        EditorCommandQueue.AddCommand($@"param/select/new/{rt}/{searchVal}");
                 }
             }
             // Add searchbar for named editing
@@ -592,7 +595,7 @@ namespace StudioCore.MsbEditor
                     {
                         if (row[foundfield.InternalName].Value.Equals(searchValue))
                         {
-                            EditorCommandQueue.AddCommand($@"param/select/{param.Key}/{row.ID}");
+                            EditorCommandQueue.AddCommand($@"param/select/-1/{param.Key}/{row.ID}");
                             break;
                         }
                     }
@@ -686,7 +689,7 @@ namespace StudioCore.MsbEditor
                     if (ImGui.Selectable($@"Goto {att.ParamName}"))
                     {
                         var id = (int)propinfo.GetValue(obj);
-                        EditorCommandQueue.AddCommand($@"param/select/{att.ParamName}/{id}");
+                        EditorCommandQueue.AddCommand($@"param/select/-1/{att.ParamName}/{id}");
                     }
                 }
                 if (ImGui.Selectable($@"Search"))

@@ -162,13 +162,11 @@ namespace StudioCore.MsbEditor
             {
                 if (ImGui.MenuItem("New View"))
                 {
-                    _activeView = new ParamEditorView(this, _views.Count);
-                    _views.Add(_activeView);
+                    AddView();
                 }
                 if (ImGui.MenuItem("Close View", null, false, _views.Count > 1))
                 {
-                    _views.Remove(_activeView);
-                    _activeView = _views.Last();
+                    RemoveView(_activeView);
                 }
                 if (ImGui.MenuItem("Show alternate field names", null, ShowAltNamesPreference)){
                     ShowAltNamesPreference = !ShowAltNamesPreference;
@@ -329,22 +327,35 @@ namespace StudioCore.MsbEditor
             {
                 if (initcmd[0] == "select")
                 {
-                    if (initcmd.Length > 1 && ParamBank.Params.ContainsKey(initcmd[1]))
+                    if (initcmd.Length > 2 && ParamBank.Params.ContainsKey(initcmd[2]))
                     {
                         doFocus = true;
-                        _activeView._selection.setActiveParam(initcmd[1]);
-                        if (initcmd.Length > 2)
+
+                        ParamEditorView viewToMofidy = _activeView;
+                        if (initcmd[1].Equals("new"))
+                            viewToMofidy = AddView();
+                        else 
                         {
-                            _activeView._selection.SetActiveRow(null);
-                            var p = ParamBank.Params[_activeView._selection.getActiveParam()];
+                            int cmdIndex = -1;
+                            bool parsable = int.TryParse(initcmd[1], out cmdIndex);
+                            if (parsable && cmdIndex >= 0 && cmdIndex < _views.Count)
+                                viewToMofidy = _views[cmdIndex];
+                        }
+                        _activeView = viewToMofidy;
+
+                        viewToMofidy._selection.setActiveParam(initcmd[2]);
+                        if (initcmd.Length > 3)
+                        {
+                            viewToMofidy._selection.SetActiveRow(null);
+                            var p = ParamBank.Params[viewToMofidy._selection.getActiveParam()];
                             int id;
-                            var parsed = int.TryParse(initcmd[2], out id);
+                            var parsed = int.TryParse(initcmd[3], out id);
                             if (parsed)
                             {
                                 var r = p.Rows.FirstOrDefault(r => r.ID == id);
                                 if (r != null)
                                 {
-                                    _activeView._selection.SetActiveRow(r);
+                                    viewToMofidy._selection.SetActiveRow(r);
                                 }
                             }
                         }
@@ -379,8 +390,12 @@ namespace StudioCore.MsbEditor
                 ImGui.DockSpace(ImGui.GetID("DockSpace_ParamEditorViews"));
                 foreach (ParamEditorView view in _views)
                 {
+                    if (view == null)
+                        continue;
                     string name = view._selection.rowSelectionExists() ? view._selection.getActiveRow().Name : null;
-                    string toDisplay = (view == _activeView ? "*" : "") + (name == null || name.Trim().Equals("") ? "Param Editor View" : name);
+                    string toDisplay = (view == _activeView ? "**" : "") + (name == null || name.Trim().Equals("") ? "Param Editor View" : name) + (view == _activeView ? "**" : "");
+                    ImGui.SetNextWindowSize(new Vector2(1280.0f, 720.0f), ImGuiCond.Once);
+                    ImGui.SetNextWindowDockID(ImGui.GetID("DockSpace_ParamEditorViews"), ImGuiCond.Once);
                     ImGui.Begin($@"{toDisplay}###ParamEditorView##{view._viewIndex}");
                     if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
                         _activeView = view;
@@ -388,10 +403,9 @@ namespace StudioCore.MsbEditor
                     {
                         if (ImGui.MenuItem("Close View"))
                         {
-                            _views.Remove(view);
-                            if (_activeView == view)
-                                _activeView = _views.Last();
-                            break;
+                            RemoveView(view);
+                            ImGui.EndMenu();
+                            break; //avoid concurrent modification
                         }
                         ImGui.EndMenu();
                     }
@@ -443,6 +457,34 @@ namespace StudioCore.MsbEditor
                 ImGui.EndPopup();
             }
 
+        }
+
+        public ParamEditorView AddView()
+        {
+            int index = 0;
+            while (index < _views.Count)
+            {
+                if (_views[index] == null)
+                    break;
+                index ++;
+            }
+            ParamEditorView view = new ParamEditorView(this, index);
+            if (index < _views.Count)
+                _views[index] = view;
+            else
+                _views.Add(view);
+            _activeView = view;
+            return view;
+        }
+
+        public bool RemoveView(ParamEditorView view)
+        {
+            if (!_views.Contains(view))
+                return false;
+            _views[view._viewIndex] = null;
+            if (view == _activeView)
+                _activeView = _views.Last();
+            return true;
         }
 
         public override void OnProjectChanged(ProjectSettings newSettings)
@@ -590,6 +632,7 @@ namespace StudioCore.MsbEditor
         {
             ImGui.Columns(3);
             ImGui.BeginChild("params");
+            float scrollTo = 0f;
             foreach (var param in ParamBank.Params)
             {
                 if (ImGui.Selectable(param.Key, param.Key == _selection.getActiveParam()))
@@ -598,10 +641,10 @@ namespace StudioCore.MsbEditor
                     //_selection.SetActiveRow(null);
                 }
                 if (doFocus && param.Key == _selection.getActiveParam())
-                {
-                    ImGui.SetScrollHereY();
-                }
+                    scrollTo = ImGui.GetCursorPosY();
             }
+            if (doFocus)
+                    ImGui.SetScrollFromPosY(scrollTo - ImGui.GetScrollY());
             ImGui.EndChild();
             ImGui.NextColumn();
             if (!_selection.paramSelectionExists())
@@ -647,6 +690,7 @@ namespace StudioCore.MsbEditor
                     p = para.Rows;
                 }
 
+                scrollTo = 0;
                 foreach (var r in p)
                 {
                     if (ImGui.Selectable($@"{r.ID} {r.Name}", _selection.getSelectedRows().Contains(r)))
@@ -679,10 +723,10 @@ namespace StudioCore.MsbEditor
                         decorator.DecorateParam(r);
                     }
                     if (doFocus && _selection.getActiveRow() == r)
-                    {
-                        ImGui.SetScrollHereY();
-                    }
+                        scrollTo = ImGui.GetCursorPosY();
                 }
+                if (doFocus)
+                    ImGui.SetScrollFromPosY(scrollTo - ImGui.GetScrollY());
             }
             ImGui.EndChild();
             ImGui.NextColumn();
