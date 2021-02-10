@@ -380,14 +380,14 @@ namespace StudioCore.MsbEditor
             object newval = null;
             ImGui.PushID(id);
             ImGui.AlignTextToFramePadding();
-            string printedName = AltName != null ? $"{visualName} ({AltName})" : visualName; 
+            string printedName = AltName != null ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{visualName} ({AltName})" : $"{AltName}*") : visualName; 
             if (Wiki == null)
                 ImGui.Text(printedName);
             else
             {
                 ImGui.TextColored(new Vector4(0.85f, 0.85f, 1.0f, 1.0f), printedName);
             }
-            PropertyRowNameContextMenu(Wiki);
+            PropertyRowNameContextMenu(visualName, Wiki);
             if (RefTypes != null)
                 ImGui.TextColored(new Vector4(1.0f, 1.0f, 0.0f, 1.0f), @$"  <{String.Join(',', RefTypes)}>");
             if (Enum != null)
@@ -457,19 +457,23 @@ namespace StudioCore.MsbEditor
                     {
                         ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), r.Name + hint);
                     }
+                    ImGui.NewLine();
                 }
             }
+            ImGui.SameLine();
             if (!entryFound)
             {
                 ImGui.TextColored(new Vector4(0.0f, 0.0f, 0.0f, 1.0f), "___");
             }
         }
-        private void PropertyRowNameContextMenu(string wiki)
+        private void PropertyRowNameContextMenu(string originalName, string wiki)
         {
-            if ( wiki == null)
+            if ( wiki == null && ParamEditorScreen.AlwaysShowOriginalNamePreference == true)
                 return;
             if (ImGui.BeginPopupContextItem("rowName"))
             {
+                if (ParamEditorScreen.AlwaysShowOriginalNamePreference == false)
+                    ImGui.Text(originalName);
                 if (wiki != null)
                     ImGui.Text(wiki);
                 ImGui.EndPopup();

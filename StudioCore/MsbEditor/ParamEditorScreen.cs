@@ -87,6 +87,7 @@ namespace StudioCore.MsbEditor
         private string _currentMEditCSVOutput = "";
         private string _mEditCSVResult = "";
 
+        public static bool AlwaysShowOriginalNamePreference = true;
         internal bool _isSearchBarActive = false;
         private bool _isMEditPopupOpen = false;
         private bool _isShortcutPopupOpen = false;
@@ -164,6 +165,9 @@ namespace StudioCore.MsbEditor
                 {
                     _views.Remove(_activeView);
                     _activeView = _views.Last();
+                }
+                if (ImGui.MenuItem("Always show original field names", null, AlwaysShowOriginalNamePreference)){
+                    AlwaysShowOriginalNamePreference = !AlwaysShowOriginalNamePreference;
                 }
                 ImGui.EndMenu();
             }
