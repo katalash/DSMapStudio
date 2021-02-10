@@ -353,9 +353,27 @@ namespace StudioCore.MsbEditor
             PropEditorPropInfoRow(row, idProp, "ID", ref id, null);
             ImGui.PopStyleColor();
 
-            foreach (var cell in cells)
+            ParamMetaData meta  = ParamMetaData.Get(row.Def);
+            if (meta != null && meta.AlternateOrder != null)
             {
-                PropEditorPropCellRow(cell, ref id, null);
+                foreach (var field in meta.AlternateOrder)
+                {
+                    if (row[field] == null)
+                        continue;
+                    PropEditorPropCellRow(row[field], ref id, null);
+                }
+                foreach (var cell in cells)
+                {
+                    if (!meta.AlternateOrder.Contains(cell.Def.InternalName))
+                        PropEditorPropCellRow(cell, ref id, null);
+                }
+            }
+            else
+            {
+                foreach (var cell in cells)
+                {
+                    PropEditorPropCellRow(cell, ref id, null);
+                }
             }
             ImGui.Columns(1);
         }
@@ -380,37 +398,33 @@ namespace StudioCore.MsbEditor
             object newval = null;
             ImGui.PushID(id);
             ImGui.AlignTextToFramePadding();
-            string printedName = AltName != null ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{visualName} ({AltName})" : $"{AltName}*") : visualName; 
-            if (Wiki == null)
-                ImGui.Text(printedName);
-            else
-            {
-                ImGui.TextColored(new Vector4(0.85f, 0.85f, 1.0f, 1.0f), printedName);
-            }
-            PropertyRowNameContextMenu(visualName, Wiki);
-            if (RefTypes != null)
+            string printedName = (AltName != null && ParamEditorScreen.ShowAltNamesPreference) ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{visualName} ({AltName})" : $"{AltName}*") : visualName; 
+            ImGui.Text(printedName);
+            PropertyRowNameContextMenu(visualName);
+            if (Wiki != null)
+                UIHints.AddImGuiHintButton(visualName, Wiki);
+            if (ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null)
                 ImGui.TextColored(new Vector4(1.0f, 1.0f, 0.0f, 1.0f), @$"  <{String.Join(',', RefTypes)}>");
-            if (Enum != null)
+            if (ParamEditorScreen.HideEnumsPreference == false && Enum != null)
                 ImGui.TextColored(new Vector4(1.0f, 1.0f, 0.0f, 1.0f), @$"  {Enum.name}");
             //PropertyRowMetaDefContextMenu();
             ImGui.NextColumn();
             ImGui.SetNextItemWidth(-1);
             bool changed = false;
 
-            if (RefTypes != null || VirtualRef != null || Enum != null)
+            if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.5f, 1.0f, 1.0f));
             changed = PropertyRow(propType, oldval, out newval, IsBool, nullableEntity, nullableName);
             bool committed = ImGui.IsItemDeactivatedAfterEdit();
-            if (RefTypes != null || VirtualRef != null || Enum != null)
+            if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null)
                 ImGui.PopStyleColor();
-            PropertyRowValueContextMenu(visualName);
+            PropertyRowValueContextMenu(visualName, VirtualRef, oldval);
 
-            if (RefTypes != null)
+            if (ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null)
                 PropertyRowRefs(RefTypes, oldval);
-            if (Enum != null)
+            if (ParamEditorScreen.HideEnumsPreference == false && Enum != null)
                 ImGui.TextColored(new Vector4(1.0f, 0.5f, 0.5f, 1.0f), Enum.values.GetValueOrDefault(oldval.ToString(), "Not Enumerated"));
-            
-            if (PropertyRowMetaValueContextMenu(oldval, ref newval, RefTypes, VirtualRef, Enum))
+            if ((ParamEditorScreen.HideReferenceRowsPreference == false || ParamEditorScreen.HideEnumsPreference == false) && PropertyRowMetaValueContextMenu(oldval, ref newval, RefTypes, Enum))
             {
                 changed = true;
                 committed = true;
@@ -466,20 +480,18 @@ namespace StudioCore.MsbEditor
                 ImGui.TextColored(new Vector4(0.0f, 0.0f, 0.0f, 1.0f), "___");
             }
         }
-        private void PropertyRowNameContextMenu(string originalName, string wiki)
+        private void PropertyRowNameContextMenu(string originalName)
         {
-            if ( wiki == null && ParamEditorScreen.AlwaysShowOriginalNamePreference == true)
+            if (ParamEditorScreen.AlwaysShowOriginalNamePreference == true)
                 return;
             if (ImGui.BeginPopupContextItem("rowName"))
             {
                 if (ParamEditorScreen.AlwaysShowOriginalNamePreference == false)
                     ImGui.Text(originalName);
-                if (wiki != null)
-                    ImGui.Text(wiki);
                 ImGui.EndPopup();
             }
         }
-        private void PropertyRowValueContextMenu(string visualName)
+        private void PropertyRowValueContextMenu(string visualName, string VirtualRef, object oldval)
         {
             if (ImGui.BeginPopupContextItem("quickMEdit"))
             {
@@ -487,20 +499,20 @@ namespace StudioCore.MsbEditor
                 {
                     EditorCommandQueue.AddCommand($@"param/menu/massEditRegex/selection: {visualName}: ");
                 }
+                if (VirtualRef != null)
+                    PropertyRowVirtualRefContextItems(VirtualRef, oldval);
                 ImGui.EndPopup();
             }
         }
-        private bool PropertyRowMetaValueContextMenu(object oldval, ref object newval, List<string> RefTypes, string VirtualRef, ParamEnum Enum)
+        private bool PropertyRowMetaValueContextMenu(object oldval, ref object newval, List<string> RefTypes, ParamEnum Enum)
         {
-            if (RefTypes == null && VirtualRef == null && Enum == null)
+            if (RefTypes == null && Enum == null)
                 return false;
             bool result = false;
             if (ImGui.BeginPopupContextItem("rowMetaValue"))
             {
                 if (RefTypes != null)
                     result |= PropertyRowRefsContextItems(RefTypes, oldval, ref newval);
-                if (VirtualRef != null)
-                    PropertyRowVirtualRefContextItems(VirtualRef, oldval);
                 if (Enum != null)
                     result |= PropertyRowEnumContextItems(Enum, oldval, ref newval);
                 ImGui.EndPopup();

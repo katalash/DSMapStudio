@@ -51,11 +51,11 @@ id 10000
 name Dagger
 propref originEquipWep0 Dagger";
 
-        public static void AddImGuiHintButton(string hint)
+        public static void AddImGuiHintButton(string id, string hint)
         {
             ImGui.SameLine();
             ImGui.TextColored(new Vector4(0.3f, 0.3f, 1.0f, 1.0f), "(?)");
-            if (ImGui.BeginPopupContextItem())
+            if (ImGui.BeginPopupContextItem(id))
             {
                 ImGui.Text(hint);
                 ImGui.EndPopup();

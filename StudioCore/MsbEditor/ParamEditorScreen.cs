@@ -87,7 +87,10 @@ namespace StudioCore.MsbEditor
         private string _currentMEditCSVOutput = "";
         private string _mEditCSVResult = "";
 
+        public static bool ShowAltNamesPreference = true;
         public static bool AlwaysShowOriginalNamePreference = true;
+        public static bool HideReferenceRowsPreference = false;
+        public static bool HideEnumsPreference = false;
         internal bool _isSearchBarActive = false;
         private bool _isMEditPopupOpen = false;
         private bool _isShortcutPopupOpen = false;
@@ -166,8 +169,17 @@ namespace StudioCore.MsbEditor
                     _views.Remove(_activeView);
                     _activeView = _views.Last();
                 }
+                if (ImGui.MenuItem("Show alternate field names", null, ShowAltNamesPreference)){
+                    ShowAltNamesPreference = !ShowAltNamesPreference;
+                }
                 if (ImGui.MenuItem("Always show original field names", null, AlwaysShowOriginalNamePreference)){
                     AlwaysShowOriginalNamePreference = !AlwaysShowOriginalNamePreference;
+                }
+                if (ImGui.MenuItem("Hide field references", null, HideReferenceRowsPreference)){
+                    HideReferenceRowsPreference = !HideReferenceRowsPreference;
+                }
+                if (ImGui.MenuItem("Hide field enums", null, HideEnumsPreference)){
+                    HideEnumsPreference = !HideEnumsPreference;
                 }
                 ImGui.EndMenu();
             }
@@ -187,7 +199,7 @@ namespace StudioCore.MsbEditor
             if (ImGui.BeginPopup("massEditMenuRegex"))
             {
                 ImGui.Text("param PARAM: id VALUE: FIELD: = VALUE;");
-                UIHints.AddImGuiHintButton(UIHints.MassEditHint);
+                UIHints.AddImGuiHintButton("MassEditHint", UIHints.MassEditHint);
                 ImGui.InputTextMultiline("MEditRegexInput", ref _currentMEditRegexInput, 65536, new Vector2(1024, 256));
                 if (ImGui.Selectable("Submit", false, ImGuiSelectableFlags.DontClosePopups))
                 {
@@ -598,7 +610,7 @@ namespace StudioCore.MsbEditor
                 if (FeatureFlags.EnableEnhancedParamEditor)
                 {
                     ImGui.Text("id VALUE | name ROW | prop FIELD VALUE | propref FIELD ROW");
-                    UIHints.AddImGuiHintButton(UIHints.SearchBarHint);
+                    UIHints.AddImGuiHintButton("MassEditHint", UIHints.SearchBarHint);
                     ImGui.InputText("Search rows...", ref _selection.getCurrentSearchString(), 256);
                     if(ImGui.IsItemActive())
                         _paramEditor._isSearchBarActive = true;

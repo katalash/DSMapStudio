@@ -22,6 +22,11 @@ namespace StudioCore.MsbEditor
         /// </summary>
         public int OffsetSize {get; set;}
 
+        /// <summary>
+        /// Provides a reordering of fields for display purposes only
+        /// </summary>
+        public List<string> AlternateOrder {get; set;}
+
         public static ParamMetaData Get(PARAMDEF def)
         {
             return _ParamMetas[def];
@@ -57,6 +62,11 @@ namespace StudioCore.MsbEditor
                 if (Off != null)
                 {
                     OffsetSize = int.Parse(Off.InnerText);
+                }
+                XmlAttribute AltOrd = self.Attributes["AlternativeOrder"];
+                if (AltOrd != null)
+                {
+                    AlternateOrder = new List<string>(AltOrd.InnerText.Split(',', StringSplitOptions.RemoveEmptyEntries));
                 }
             }
 

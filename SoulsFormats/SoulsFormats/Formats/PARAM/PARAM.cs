@@ -273,6 +273,11 @@ namespace SoulsFormats
         public class Row
         {
             /// <summary>
+            /// The paramdef that describes this row.
+            /// </summary>
+            public PARAMDEF Def { get; set; }
+
+            /// <summary>
             /// The ID number of this row.
             /// </summary>
             public long ID { get; set; }
@@ -294,6 +299,7 @@ namespace SoulsFormats
             /// </summary>
             public Row(long id, string name, PARAMDEF paramdef)
             {
+                Def = paramdef;
                 ID = id;
                 Name = name;
 
@@ -313,6 +319,7 @@ namespace SoulsFormats
             /// <param name="clone">The row that is being copied</param>
             public Row(Row clone)
             {
+                Def = clone.Def;
                 ID = clone.ID;
                 Name = clone.Name;
                 var cells = new List<Cell>(clone.Cells.Count);
@@ -354,6 +361,8 @@ namespace SoulsFormats
                 // In case someone decides to add new rows before applying the paramdef (please don't do that)
                 if (DataOffset == 0)
                     return;
+
+                Def = paramdef;
 
                 br.Position = DataOffset;
                 var cells = new Cell[paramdef.Fields.Count];
