@@ -354,7 +354,7 @@ namespace StudioCore.MsbEditor
             ImGui.PopStyleColor();
 
             ParamMetaData meta  = ParamMetaData.Get(row.Def);
-            if (meta != null && meta.AlternateOrder != null)
+            if (meta != null && meta.AlternateOrder != null && ParamEditorScreen.AllowFieldReorderPreference)
             {
                 foreach (var field in meta.AlternateOrder)
                 {

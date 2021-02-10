@@ -91,6 +91,7 @@ namespace StudioCore.MsbEditor
         public static bool AlwaysShowOriginalNamePreference = true;
         public static bool HideReferenceRowsPreference = false;
         public static bool HideEnumsPreference = false;
+        public static bool AllowFieldReorderPreference = true;
         internal bool _isSearchBarActive = false;
         private bool _isMEditPopupOpen = false;
         private bool _isShortcutPopupOpen = false;
@@ -180,6 +181,9 @@ namespace StudioCore.MsbEditor
                 }
                 if (ImGui.MenuItem("Hide field enums", null, HideEnumsPreference)){
                     HideEnumsPreference = !HideEnumsPreference;
+                }
+                if (ImGui.MenuItem("Allow field reordering", null, AllowFieldReorderPreference)){
+                    AllowFieldReorderPreference = !AllowFieldReorderPreference;
                 }
                 ImGui.EndMenu();
             }
