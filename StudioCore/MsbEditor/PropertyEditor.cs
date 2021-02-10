@@ -412,11 +412,15 @@ namespace StudioCore.MsbEditor
             ImGui.SetNextItemWidth(-1);
             bool changed = false;
 
-            if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null)
+            bool matchDefault = paramRowOrCell.GetType() == typeof(PARAM.Cell) && ((PARAM.Cell)paramRowOrCell).Def.Default.Equals(oldval);
+            if (matchDefault)
+                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.75f, 0.75f, 0.75f, 1.0f));
+            else if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.5f, 1.0f, 1.0f));
+
             changed = PropertyRow(propType, oldval, out newval, IsBool, nullableEntity, nullableName);
             bool committed = ImGui.IsItemDeactivatedAfterEdit();
-            if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null)
+            if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null || matchDefault)
                 ImGui.PopStyleColor();
             PropertyRowValueContextMenu(visualName, VirtualRef, oldval);
 
