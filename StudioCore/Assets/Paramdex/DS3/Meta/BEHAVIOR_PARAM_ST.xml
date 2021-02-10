@@ -133,9 +133,15 @@
 	  </Enum>
   </Enums>
   <Field>
-    <variationId VRef="behaviourVariation" />
+    <variationId AltName="Behavior Variation ID" VRef="behaviourVariation" />
 	<behaviorJudgeId Enum="AttackType" />
+	<ezStateBehaviorType_old AltName="State Behavior Type" />
 	<refType Enum="ReferenceType" />
-	<refId Refs="Bullet,AtkParam_Pc,SpEffectParam" />
+	<refId Refs="AtkParam_Pc,Bullet,SpEffectParam" />
+	<sfxVariationId AltName="SFX Variation ID" />
+	<stamina AltName="Stamina Cost" />
+	<mp AltName="Durability Cost" />
+	<category Enum="BehaviorCategory" />
+	<heroPoint AltName="Humanity Cost" />
   </Field>
 </PARAMMETA>
