@@ -379,7 +379,7 @@
  -,
  conditionHp, conditionMaxHp, Unk26,
  effectTargetOpposeTarget, effectTargetFriendlyTarget, effectTargetSelfTarget,
- Unk2, Unk3, Unk4, Unk5, Unk6,
+ effectTargetSelf, effectTargetFriend, effectTargetEnemy, effectTargetPlayer, effectTargetAI, effectTargetLive, effectTargetGhost, effectTargetWhiteGhost, effectTargetBlackGhost, effectTargetAttacker,
  -,
  maxHpRate, maxMpRate, maxStaminaCutRate,
  changeHpRate, changeHpPoint, changeMpRate, changeMpPoint, changeStaminaRate, changeStaminaPoint,
@@ -398,13 +398,13 @@
  -,
  PoisonResistChange, ToxicResistChange, BleedResistChange, CurseResistChange, FrostResistChange,
  registPoison, registToxic, registBlood, registCurse, registFrost,
+ disablePoison, disableToxic, disableBlood, disableCurse, Unk24,
  registPoisonChangeRate, registToxicChangeRate, registBloodChangeRate, registCurseChangeRate, registFrostChangeRate,
  poisonAtkRate, toxicAtkRate, bleedAtkRate, toxicAtkRate, Unk22,
- disablePoison, disableToxic, disableBlood, disableCurse, Unk24,
  bloodDamageRate,
  -,
- magParamChange, miracleParamChange, Unk37,
  swordArtMpChangeRate, magicMpChangeRate, PyroMpChangeRate, MiracleMpChangeRate,
+ magParamChange, miracleParamChange, Unk37,
  bAdjustMagicAbility, bAdjustFaithAbility,
  -,
  noGuardDamageRate,
@@ -453,7 +453,6 @@
  throwCondition,
  addBehaviorJudgeId_condition,
  addBehaviorJudgeId_add,
- effectTargetSelf, effectTargetFriend, effectTargetEnemy, effectTargetPlayer, effectTargetAI, effectTargetLive, effectTargetGhost, effectTargetWhiteGhost, effectTargetBlackGhost, effectTargetAttacker,
  useSpEffectEffect,
  bGameClearBonus,
  -,
@@ -517,7 +516,9 @@
  HumanPoint, fakeDexterity_castSpeed,
  -,
  physAtkRate, magicAtkRate, fireAtkRate, thunderAtkRate,
- physDef, magicDef, fireDef, thunderDef"
+ physDef, magicDef, fireDef, thunderDef,
+ -,
+ Unk2, Unk3, Unk4, Unk5, Unk6"
 />
   
   <Field>
