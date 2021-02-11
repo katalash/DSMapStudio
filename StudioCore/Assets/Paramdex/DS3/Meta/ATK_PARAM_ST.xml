@@ -39,6 +39,15 @@
 		<Option Value="1" Name="Block Parry" />
 		<Option Value="2" Name="Affect Guard / Block Parry" />
 	  </Enum>
+	  <Enum Name="HitType">
+		<Option Value="0" Name="Ignore WallBounce Collision" />
+		<Option Value="2" Name="Invoke WallBounce Collision" />
+	  </Enum>
+	  <Enum Name="MapHitType">
+		<Option Value="0" Name="Default" />
+		<Option Value="1" Name="Projectile" />
+		<Option Value="2" Name="Hazard" />
+	  </Enum>
   </Enums>
   <Self AlternativeOrder="KnockbackDist,HitStopTime,
 spEffect0,spEffect1,spEffect2,spEffect3,spEffect4,

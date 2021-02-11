@@ -358,6 +358,11 @@ namespace StudioCore.MsbEditor
             {
                 foreach (var field in meta.AlternateOrder)
                 {
+                    if (field.Equals("-"))
+                    {
+                        ImGui.Separator();
+                        continue;
+                    }
                     if (row[field] == null)
                         continue;
                     PropEditorPropCellRow(row[field], ref id, null);

@@ -372,6 +372,154 @@
 		<Option Value="10045" Name="Armor and Sword Blue Aura" />
 	  </Enum>
   </Enums>
+  <Self AlternativeOrder="
+ iconId,
+ dispIconNonactive,
+ effectEndurance, motionInterval,
+ -,
+ conditionHp, conditionMaxHp, Unk26,
+ effectTargetOpposeTarget, effectTargetFriendlyTarget, effectTargetSelfTarget,
+ Unk2, Unk3, Unk4, Unk5, Unk6,
+ -,
+ maxHpRate, maxMpRate, maxStaminaCutRate,
+ changeHpRate, changeHpPoint, changeMpRate, changeMpPoint, changeStaminaRate, changeStaminaPoint,
+ maxHpChangeRate,
+ mpRecoverChangeSpeed, staminaRecoverChangeSpeed,
+ -,
+ PhysDefCutRate2, MagicDefCutRate2, FireDefCutRate2, ThunderDefCutRate2, DarkDefCutRate2,
+ physDamageRate2, magicDamageRate2, fireDamageRate2, thunderDamageRate2, darkDamageRate2,
+ PhysDefCutRateMP, MagicDefCutRateMP, FireDefCutRateMP, ThunderDefCutRateMP, DarkDefCutRateMP,
+ physUnkRate, magicUnkRate, fireUnkRate, thunderUnkRate, darkUnkRate,
+ physAtkPowerRate, magicAtkPowerRate, fireAtkPowerRate, thunderAtkPowerRate, darkAttackPowerRate,
+ physAtkPower, magicAtkPower, fireAtkPower, thunderAtkPower, darkAtkPower,
+ slashDamageCutRate, blowDamageCutRate, thrustDamageCutRate,
+ neutralDamageCutRate, magicDamageCutRate, fireDamageCutRate, thunderDamageCutRate, darkDamageCutRate,
+ Unk36,
+ -,
+ PoisonResistChange, ToxicResistChange, BleedResistChange, CurseResistChange, FrostResistChange,
+ registPoison, registToxic, registBlood, registCurse, registFrost,
+ registPoisonChangeRate, registToxicChangeRate, registBloodChangeRate, registCurseChangeRate, registFrostChangeRate,
+ poisonAtkRate, toxicAtkRate, bleedAtkRate, toxicAtkRate, Unk22,
+ disablePoison, disableToxic, disableBlood, disableCurse, Unk24,
+ bloodDamageRate,
+ -,
+ magParamChange, miracleParamChange, Unk37,
+ swordArtMpChangeRate, magicMpChangeRate, PyroMpChangeRate, MiracleMpChangeRate,
+ bAdjustMagicAbility, bAdjustFaithAbility,
+ -,
+ noGuardDamageRate,
+ vitalSpotChangeRate,
+ normalSpotChangeRate,
+ behaviorId,
+ animIdOffset,
+ magicEffectTimeChange,
+ insideDurability,
+ maxDurability,
+ staminaAttackRate,
+ fallDamageRate,
+ equipWeightChangeRate,
+ allItemWeightChangeRate,
+ soulRate,
+ soul,
+ clearSoul,
+ haveSoulRate,
+ targetPriority,
+ sightSearchEnemyCut, hearingSearchEnemyCut,
+ gravityRate,
+ soulStealRate,
+ lifeReductionType,
+ lifeReductionRate,
+ hpRecoverRate,
+ replaceSpEffectId, cycleOccurenceSpEffectId, atkOccurenceSpEffectId,
+ guardDefFlickPowerRate,
+ guardStaminaCutRate,
+ rayCastPassedTime,
+ changeSuperArmorPoint,
+ bowDistRate,
+ spCategory,
+ categoryPriority,
+ saveCategory,
+ changeMagicSlot, changeMiracleSlot,
+ heroPointDamage,
+ defFlickPower,
+ flickDamageCutRate,
+ -,
+ dmgLv_None, dmgLv_S, dmgLv_M, dmgLv_L, dmgLv_BlowM, dmgLv_Push, dmgLv_Strike, dmgLv_BlowS, dmgLv_Min, dmgLv_Uppercut, dmgLv_BlowLL, dmgLv_Breath,
+ -,
+ atkAttribute, spAttribute,
+ stateInfo,
+ wepParamChange,
+ moveType,
+ throwCondition,
+ addBehaviorJudgeId_condition,
+ addBehaviorJudgeId_add,
+ effectTargetSelf, effectTargetFriend, effectTargetEnemy, effectTargetPlayer, effectTargetAI, effectTargetLive, effectTargetGhost, effectTargetWhiteGhost, effectTargetBlackGhost, effectTargetAttacker,
+ useSpEffectEffect,
+ bGameClearBonus,
+ -,
+ requestSos, requestBlackSos, requestForceJoinBlackSos, requestKickSession, requestLeaveSession, requestNpcInvade,
+ -,
+ noDead,
+ bCurrHPIndependeMaxHP,
+ corrosionIgnore,
+ sightSearchCutIgnore, hearingSearchCutIgnore,
+ antiMagicIgnore,
+ fakeTargetIgnore, fakeTargetIgnoreUndead, fakeTargetIgnoreAnimal,
+ gravityIgnore,
+ enableCharm,
+ enableLifeTime,
+ hasTarget,
+ isFireDamageCancel,
+ isExtendSpEffectLife,
+ requestLeaveColiseumSession,
+ disableFrost,
+ chargeAttackParamChange,
+ throwAttackParamChange,
+ enableEquipSlotCheck,
+ vowType0, vowType1, vowType2, vowType3, vowType4, vowType5, vowType6, vowType7, vowType8, vowType9, vowType10, vowType11, vowType12, vowType13, vowType14, vowType15,
+ DamageChangeState [ON_OFF],
+ Unk1,
+ Unk7,
+ Unk8,
+ EffectVfx0,
+ stateSpEffect0, stateSpEffect1, stateSpEffect2, stateSpEffect3,
+ stabilityVal,
+ Unk10,
+ EffectVfx1, EffectVfx2, EffectVfx3, EffectVfx4, EffectVfx5, EffectVfx6, EffectVfx7,
+ Unk14,
+ poiseRate,
+ staminaRate,
+ Unk20,
+ dropRate,
+ Unk21,
+ UnkDamageRate0, UnkDamageRate1, UnkDamageRate2, UnkDamageRate3,
+ playerBaseVal0, playerBaseVal1, playerBaseVal2, playerBaseVal3,
+ Unk23,
+ useSpValCorrection, useDifferentVal, instaDeath,
+ Unk25,
+ Unk27,
+ DisableMultiPlayUse,
+ -,
+ physRate, magicRate, fireRate, thunderRate, darkRate,
+ slashSpAttackRate, blowSpAttackRate, thrustSpAttackRate,
+ physSpAttackRate, magicSpAttackRate, fireSpAttackRate, ThunderSpAttackRate, DarkSpAttackRate,
+ physDefRate, magicDefRate, fireDefRate, thunderDefRate, darkDefRate,
+ -,
+ ConditionHpChange0, ConditionHpChange1, ConditionHpChange2,
+ Unk38,
+ subChangeHpRate, subHpPoint, subChangeMpRate, subMpPoint, subHpRestoreRate, subMpRestoreRate,
+ DeathOccurenceSpEffectId,
+ effectEnduranceRate,
+ Unk40, Unk41,
+ subSpCategory,
+ -,
+ Vigor, Attunement, Endurance, Vitality, Strength, Dexterity, Intelligence, Faith, Luck,
+ HumanPoint, fakeDexterity_castSpeed,
+ -,
+ physAtkRate, magicAtkRate, fireAtkRate, thunderAtkRate,
+ physDef, magicDef, fireDef, thunderDef"
+/>
+  
   <Field>
     <iconId Enum="IconID" />
 	<conditionHp AltName="Trigger on HP Below %" />
@@ -387,6 +535,7 @@
 	<magicDamageCutRate AltName="Absorption: Magic" />
 	<fireDamageCutRate AltName="Absorption: Fire" />
 	<thunderDamageCutRate AltName="Absorption: Lightning" />
+	<darkDamageCutRate AltName="Absorption: Dark" />
 	<physAtkRate AltName="Attack %: Physical" />
 	<magicAtkRate AltName="Attack %: Magic" />
 	<fireAtkRate AltName="Attack %: Fire" />
@@ -395,14 +544,17 @@
 	<magicAtkPowerRate AltName="Power %: Magic" />
 	<fireAtkPowerRate AltName="Power %: Fire" />
 	<thunderAtkPowerRate AltName="Power %: Lightning" />
+	<darkAttackPowerRate AltName="Power %: Dark" />
 	<physAtkPower AltName="Damage +: Physical" />
 	<magicAtkPower AltName="Damage +: Magic" />
 	<fireAtkPower AltName="Damage +: Fire" />
 	<thunderAtkPower AltName="Damage +: Lighting" />
+	<darkAtkPower AltName="Damage +: Dark" />
 	<physDefRate AltName="Defence %: Physical" />
 	<magicDefRate AltName="Defence %: Magic" />
 	<fireDefRate AltName="Defence %: Fire" />
 	<thunderDefRate AltName="Defence %: Lightning" />
+	<darkDefRate AltName="Defence %: Dark" />
 	<physDef AltName="Defence +: Physical" />
 	<magicDef AltName="Defence +: Magic" />
 	<fireDef AltName="Defence +: Fire" />
@@ -432,7 +584,7 @@
 	<equipWeightChangeRate AltName="Equip Load %" />
 	<allItemWeightChangeRate AltName="Item Weight %" />
 	<soul AltName="Add Souls +" />
-	<haveSoulRate AltName="Have Souls %" Wiki="Possibly from cut DS2 dark spells - effect may be Trigger if souls %"/>
+	<haveSoulRate AltName="Dropped Souls *" Wiki="Number of souls an enemy has, and drops when defeated"/>
 	<targetPriority Wiki="Requires State Info 46" />
 	<sightSearchEnemyCut AltName="Enemy Sight Reduction" Wiki="Requires State Info 8" />
 	<hearingSearchEnemyCut AltName="Enemy Listen Reduction" Wiki="Requires State Info 54" />
@@ -632,7 +784,7 @@
 	<ConditionHpChange0 Enum="StateInfo" AltName="Trigger on State Info: 0" />
 	<ConditionHpChange1 Enum="StateInfo" AltName="Trigger on State Info: 1" />
 	<ConditionHpChange2 Enum="StateInfo" AltName="Trigger on State Info: 2" />
-	<Unk37 AltName="Affects Pyromancy" />
+	<Unk37 AltName="Affects Pyromancy" IsBool="" />
 	<fakeDexterity_castSpeed AltName="Cast Speed +" />
 	<Unk38 AltName="Purchase Item / Soul Transposition Menu" />
 	<swordArtMpChangeRate AltName="Weapon Skill Cost %" />

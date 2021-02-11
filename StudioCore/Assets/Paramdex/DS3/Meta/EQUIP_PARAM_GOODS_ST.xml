@@ -57,83 +57,84 @@
 		<Option Value="2" Name="Material" />
 	  </Enum>
   </Enums>
+  <Self AlternativeOrder="" />
   <Field>
 	<refId1 Refs="SpEffectParam" AltName="Ref ID 1" />
-		<sfxVariationId AltName="VFX Variation ID" />
-		<fragmentNum AltName="Base Price" />
-		<yesNoDialogMessageId AltName="Dialog Message ID" />
-		<shopLv AltName="Shop Level" />
-		<maxNum AltName="Max Amount" />
-		<goodsType Enum="GoodsType" 
-		<refCategory Enum="ReferenceType" />
-		<spEffectCategory Enum="SpEffectCategory" />
-		<goodsUseAnim Enum="GoodsUseAnim" />
-		<opmeMenuType Enum="OpenMenuType" />
-		<vowType0 IsBool="" />
-		<vowType1 IsBool="" />
-		<vowType2 IsBool="" />
-		<vowType3 IsBool="" />
-		<vowType4 IsBool="" />
-		<vowType5 IsBool="" />
-		<vowType6 IsBool="" />
-		<vowType7 IsBool="" />
-		<vowType8 IsBool="" />
-		<vowType9 IsBool="" />
-		<vowType10 IsBool="" />
-		<vowType11 IsBool="" />
-		<vowType12 IsBool="" />
-		<vowType13 IsBool="" />
-		<vowType14 IsBool="" />
-		<vowType15 IsBool="" />
-		<enable_live IsBool="" />
-		<enable_gray IsBool="" />
-		<enable_white IsBool="" />
-		<enable_black IsBool="" />
-		<enable_multi AltName="Enable Multiplayer" IsBool="" />
-		<disable_offline AltName="Enable Offline" IsBool="" />
-		<isEquip IsBool="" />
-		<isConsume IsBool="" />
-		<isAutoEquip IsBool="" />
-		<isEstablishment IsBool="" />
-		<isOnlyOne IsBool="" />
-		<isDrop IsBool="" />
-		<isDeposit IsBool="" />
-		<isDisableHand IsBool="" />
-		<isTravelItem IsBool="" />
-		<isSuppleItem IsBool="" />
-		<isFullSuppleItem IsBool="" />
-		<isEnhance IsBool="" />
-		<isFixItem IsBool="" />
-		<disableMutliDropShare AltName="Is Disable Multi Drop Share" IsBool="" />
-		<disableUseAtColiseum AltName="Is Disable Use in Undead Arena" IsBool="" />
-		<disableUseAtOutofColiseum AltName="Is Disable Use outside of Undead Arena" IsBool="" />
-		<useBulletMaxNum IsBool="" />
-		<useHpCureMaxNum IsBool="" />
-		<isAutoReplenish IsBool="" />
-		<canMultiUse IsBool="" />
-		<isGuestDrop IsBool="" />
-		<isEnchantLeftHand IsBool="" />
-		<isApplySpecialEffect IsBool="" />
-		<Unk1 IsBool="" />
-		<Unk2 IsBool="" />
-		<Unk3 IsBool="" />
-		<refId2 AltName="Ref ID - Offhand" />
-		<reinforceParamWeapon Refs="EquipParamWeapon" AltName="Virtual Weapon ID - For damage scaling" />
-		<VagrantItemLotId AltName="Vagrant Item Lot ID" />
-		<VagrantBonusEneDropItemLotId AltName="Vagrant (Enemy) Item Lot ID" />
-		<vagrantItemeneDropItemLotId AltName="Vagrant (Enemy) Item Lot ID" />
-		<refVirtualWepId AltName="FFX ID During Item Use Animation" />
-		<isLoadOfCinder AltName="Is Ember Stays Active" IsBool="" />
-		<isPlayRegion1 AltName="Is Get Play Region Info" IsBool="" />
-		<isLadder AltName="Is Using Ladder" IsBool="" />
-		<isMultiPlay AltName="Is Enable On Session Creation" IsBool="" />
-		<useSelected AltName="Is Use Selected" IsBool="" />
-		<Unk4 AltName="Is Enchant Left" IsBool="" />
-		<isPlayRegion2 AltName="Is Always Valid" IsBool="" />
-		<isNetPenalized IsBool="" />
-		<menuAdhocType AltName="Is Enable Scaleform" />
-		<dropON_OFF AltName="Can Drop" />
-		<shopId AltName="Shop Price" />
-		<fpConsume AltName="FP Cost" />
+	<sfxVariationId AltName="VFX Variation ID" />
+	<fragmentNum AltName="Base Price" />
+	<yesNoDialogMessageId AltName="Dialog Message ID" />
+	<shopLv AltName="Shop Level" />
+	<maxNum AltName="Max Amount" />
+	<goodsType Enum="GoodsType" />
+	<refCategory Enum="ReferenceType" />
+	<spEffectCategory Enum="SpEffectCategory" />
+	<goodsUseAnim Enum="GoodsUseAnim" />
+	<opmeMenuType Enum="OpenMenuType" />
+	<vowType0 IsBool="" />
+	<vowType1 IsBool="" />
+	<vowType2 IsBool="" />
+	<vowType3 IsBool="" />
+	<vowType4 IsBool="" />
+	<vowType5 IsBool="" />
+	<vowType6 IsBool="" />
+	<vowType7 IsBool="" />
+	<vowType8 IsBool="" />
+	<vowType9 IsBool="" />
+	<vowType10 IsBool="" />
+	<vowType11 IsBool="" />
+	<vowType12 IsBool="" />
+	<vowType13 IsBool="" />
+	<vowType14 IsBool="" />
+	<vowType15 IsBool="" />
+	<enable_live IsBool="" />
+	<enable_gray IsBool="" />
+	<enable_white IsBool="" />
+	<enable_black IsBool="" />
+	<enable_multi AltName="Enable Multiplayer" IsBool="" />
+	<disable_offline AltName="Enable Offline" IsBool="" />
+	<isEquip IsBool="" />
+	<isConsume IsBool="" />
+	<isAutoEquip IsBool="" />
+	<isEstablishment IsBool="" />
+	<isOnlyOne IsBool="" />
+	<isDrop IsBool="" />
+	<isDeposit IsBool="" />
+	<isDisableHand IsBool="" />
+	<isTravelItem IsBool="" />
+	<isSuppleItem IsBool="" />
+	<isFullSuppleItem IsBool="" />
+	<isEnhance IsBool="" />
+	<isFixItem IsBool="" />
+	<disableMutliDropShare AltName="Is Disable Multi Drop Share" IsBool="" />
+	<disableUseAtColiseum AltName="Is Disable Use in Undead Arena" IsBool="" />
+	<disableUseAtOutofColiseum AltName="Is Disable Use outside of Undead Arena" IsBool="" />
+	<useBulletMaxNum IsBool="" />
+	<useHpCureMaxNum IsBool="" />
+	<isAutoReplenish IsBool="" />
+	<canMultiUse IsBool="" />
+	<isGuestDrop IsBool="" />
+	<isEnchantLeftHand IsBool="" />
+	<isApplySpecialEffect IsBool="" />
+	<Unk1 IsBool="" />
+	<Unk2 IsBool="" />
+	<Unk3 IsBool="" />
+	<refId2 AltName="Ref ID - Offhand" />
+	<reinforceParamWeapon Refs="EquipParamWeapon" AltName="Virtual Weapon ID - For damage scaling" />
+	<VagrantItemLotId AltName="Vagrant Item Lot ID" />
+	<VagrantBonusEneDropItemLotId AltName="Vagrant (Enemy) Item Lot ID" />
+	<vagrantItemeneDropItemLotId AltName="Vagrant (Enemy) Item Lot ID" />
+	<refVirtualWepId AltName="FFX ID During Item Use Animation" />
+	<isLoadOfCinder AltName="Is Ember Stays Active" IsBool="" />
+	<isPlayRegion1 AltName="Is Get Play Region Info" IsBool="" />
+	<isLadder AltName="Is Using Ladder" IsBool="" />
+	<isMultiPlay AltName="Is Enable On Session Creation" IsBool="" />
+	<useSelected AltName="Is Use Selected" IsBool="" />
+	<Unk4 AltName="Is Enchant Left" IsBool="" />
+	<isPlayRegion2 AltName="Is Always Valid" IsBool="" />
+	<isNetPenalized IsBool="" />
+	<menuAdhocType AltName="Is Enable Scaleform" />
+	<dropON_OFF AltName="Can Drop" />
+	<shopId AltName="Shop Price" />
+	<fpConsume AltName="FP Cost" />
   </Field>
 </PARAMMETA>
