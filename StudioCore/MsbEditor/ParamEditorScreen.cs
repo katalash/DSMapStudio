@@ -88,10 +88,11 @@ namespace StudioCore.MsbEditor
         private string _mEditCSVResult = "";
 
         public static bool ShowAltNamesPreference = true;
-        public static bool AlwaysShowOriginalNamePreference = true;
+        public static bool AlwaysShowOriginalNamePreference = false;
         public static bool HideReferenceRowsPreference = false;
         public static bool HideEnumsPreference = false;
         public static bool AllowFieldReorderPreference = true;
+        
         internal bool _isSearchBarActive = false;
         private bool _isMEditPopupOpen = false;
         private bool _isShortcutPopupOpen = false;
