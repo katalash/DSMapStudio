@@ -92,7 +92,7 @@ namespace StudioCore.MsbEditor
         public static bool HideReferenceRowsPreference = false;
         public static bool HideEnumsPreference = false;
         public static bool AllowFieldReorderPreference = true;
-        
+
         internal bool _isSearchBarActive = false;
         private bool _isMEditPopupOpen = false;
         private bool _isShortcutPopupOpen = false;
@@ -165,7 +165,7 @@ namespace StudioCore.MsbEditor
                 {
                     AddView();
                 }
-                if (ImGui.MenuItem("Close View", null, false, _views.Count > 1))
+                if (ImGui.MenuItem("Close View", null, false, CountViews() > 1))
                 {
                     RemoveView(_activeView);
                 }
@@ -382,7 +382,7 @@ namespace StudioCore.MsbEditor
             }
             MassEditPopups();
 
-            if (_views.Count == 1)
+            if (CountViews() == 1)
             {
                 _activeView.ParamView(doFocus);
             }
@@ -483,9 +483,16 @@ namespace StudioCore.MsbEditor
             if (!_views.Contains(view))
                 return false;
             _views[view._viewIndex] = null;
-            if (view == _activeView)
-                _activeView = _views.Last();
+            if (view == _activeView || _activeView == null)
+            {
+                _activeView = _views.FindLast(e => e != null);
+            }
             return true;
+        }
+
+        public int CountViews()
+        {
+            return _views.Where(e => e != null).Count();
         }
 
         public override void OnProjectChanged(ProjectSettings newSettings)
