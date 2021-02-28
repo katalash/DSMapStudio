@@ -21,6 +21,11 @@ namespace StudioCore.MsbEditor
         /// Max value of trailing digits used for offset, +1
         /// </summary>
         public int OffsetSize {get; set;}
+        
+        /// <summary>
+        /// Whether row 0 is a dummy to be ignored
+        /// </summary>
+        public bool Row0Dummy {get; set;}
 
         /// <summary>
         /// Provides a reordering of fields for display purposes only
@@ -62,6 +67,11 @@ namespace StudioCore.MsbEditor
                 if (Off != null)
                 {
                     OffsetSize = int.Parse(Off.InnerText);
+                }
+                XmlAttribute R0 = self.Attributes["Row0Dummy"];
+                if (R0 != null)
+                {
+                    Row0Dummy = true;
                 }
                 XmlAttribute AltOrd = self.Attributes["AlternativeOrder"];
                 if (AltOrd != null)

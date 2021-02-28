@@ -372,7 +372,7 @@
 		<Option Value="10045" Name="Armor and Sword Blue Aura" />
 	  </Enum>
   </Enums>
-  <Self AlternativeOrder="
+  <Self Row0Dummy="" AlternativeOrder="
  iconId,
  dispIconNonactive,
  effectEndurance, motionInterval,
@@ -518,9 +518,7 @@
  physAtkRate, magicAtkRate, fireAtkRate, thunderAtkRate,
  physDef, magicDef, fireDef, thunderDef,
  -,
- Unk2, Unk3, Unk4, Unk5, Unk6"
-/>
-  
+ Unk2, Unk3, Unk4, Unk5, Unk6" />
   <Field>
     <iconId Enum="IconID" />
 	<conditionHp AltName="Trigger on HP Below %" />

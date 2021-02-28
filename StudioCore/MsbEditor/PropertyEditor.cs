@@ -456,11 +456,14 @@ namespace StudioCore.MsbEditor
                 string hint = "";
                 if (ParamBank.Params.ContainsKey(rt))
                 {
-                    PARAM.Row r = ParamBank.Params[rt][(int) oldval];
+                    PARAM param = ParamBank.Params[rt];
+                    ParamMetaData meta = ParamMetaData.Get(ParamBank.Params[rt].AppliedParamdef);
+                    if (meta != null && meta.Row0Dummy && (int) oldval == 0)
+                        continue;
+                    PARAM.Row r = param[(int) oldval];
                     ImGui.SameLine();
                     if (r == null && (int) oldval > 0)
                     {
-                        ParamMetaData meta = ParamMetaData.Get(ParamBank.Params[rt].AppliedParamdef);
                         if (meta != null && meta.OffsetSize > 0)
                         {
                             // Test if previous row exists. In future, add param meta to determine size of offset
@@ -539,10 +542,12 @@ namespace StudioCore.MsbEditor
                     continue;
                 }
                 int searchVal = (int) oldval;
-                if (ParamBank.Params[rt][(int) searchVal] == null && searchVal > 0)
+                ParamMetaData meta = ParamMetaData.Get(ParamBank.Params[rt].AppliedParamdef);
+                if (meta != null)
                 {
-                    ParamMetaData meta = ParamMetaData.Get(ParamBank.Params[rt].AppliedParamdef);
-                    if (meta != null && meta.OffsetSize > 0)
+                    if (meta.Row0Dummy && searchVal == 0)
+                        continue;
+                    if (meta.OffsetSize > 0 && searchVal > 0 && ParamBank.Params[rt][(int) searchVal] == null)
                     {
                         // Test if previous row exists. In future, add param meta to determine size of offset
                         searchVal = (int) oldval - (int) oldval % meta.OffsetSize;

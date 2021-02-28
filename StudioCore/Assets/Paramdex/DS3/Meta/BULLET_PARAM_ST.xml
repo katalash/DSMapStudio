@@ -21,6 +21,7 @@
 		<Option Value="255" Name="None255" />
 	 </Enum>
   </Enums>
+  <Self Row0Dummy="" />
   <Field>
     <atkBullet_Id Refs="AtkParam_Pc" AltName="AtkParam ID" Wiki="Attack parameters for bullet impact." />
 	<sfxIdBullet AltName="Projectile FX ID" Wiki="Visual effect ID for bullet projectile." />
