@@ -49,7 +49,7 @@
 		<Option Value="2" Name="Hazard" />
 	  </Enum>
   </Enums>
-  <Self Row0Dummy="", AlternativeOrder="KnockbackDist,HitStopTime,
+  <Self Row0Dummy="" AlternativeOrder="KnockbackDist,HitStopTime,
 spEffect0,spEffect1,spEffect2,spEffect3,spEffect4,
 atkElementCorrectId,
 BlowingCorrection,AtkPhysCorrection,AtkMagCorrection,AtkFireCorrection,AtkThunCorrection,atkDarkCorrection,AtkStamCorrection,
