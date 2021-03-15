@@ -494,12 +494,12 @@ namespace StudioCore.MsbEditor
         }
         private void PropertyRowNameContextMenu(string originalName)
         {
-            if (ParamEditorScreen.AlwaysShowOriginalNamePreference == true)
-                return;
             if (ImGui.BeginPopupContextItem("rowName"))
             {
-                if (ParamEditorScreen.AlwaysShowOriginalNamePreference == false)
+                if (ParamEditorScreen.ShowAltNamesPreference == true && ParamEditorScreen.AlwaysShowOriginalNamePreference == false)
                     ImGui.Text(originalName);
+                if (ImGui.Selectable("Search..."))
+                    EditorCommandQueue.AddCommand($@"param/search/prop {originalName.Replace(" ", "\\s")} ");
                 ImGui.EndPopup();
             }
         }

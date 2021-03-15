@@ -362,6 +362,13 @@ namespace StudioCore.MsbEditor
                         }
                     }
                 }
+                else if (initcmd[0] == "search")
+                {
+                    if (initcmd.Length > 1 )
+                    {
+                        _activeView._selection.getCurrentSearchString() = initcmd[1];
+                    }
+                }
                 else if (initcmd[0] == "menu" && initcmd.Length > 1)
                 {
                     if (initcmd[1] == "massEditRegex")
