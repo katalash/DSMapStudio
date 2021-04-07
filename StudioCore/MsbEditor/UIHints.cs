@@ -51,15 +51,24 @@ id 10000
 name Dagger
 propref originEquipWep0 Dagger";
 
-        public static void AddImGuiHintButton(string id, string hint)
+        public static bool AddImGuiHintButton(string id, ref string hint)
         {
+            bool ret = false;
             ImGui.SameLine();
             ImGui.TextColored(new Vector4(0.3f, 0.3f, 1.0f, 1.0f), "(?)");
             if (ImGui.BeginPopupContextItem(id))
             {
-                ImGui.Text(hint);
+                if (ParamEditorScreen.EditorMode)
+                {
+                    ImGui.InputTextMultiline("", ref hint, 8196, new Vector2(720, 480));
+                    if (ImGui.IsItemDeactivatedAfterEdit())
+                        ret = true;
+                }
+                else
+                    ImGui.Text(hint);
                 ImGui.EndPopup();
             }
+            return ret;
         }
     }
 }

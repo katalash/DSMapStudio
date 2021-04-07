@@ -83,6 +83,7 @@ namespace StudioCore.MsbEditor
         private string _currentMEditRegexInput = "";
         private string _lastMEditRegexInput = "";
         private string _mEditRegexResult = "";
+        private string _currentMEditSingleCSVField = "";
         private string _currentMEditCSVInput = "";
         private string _currentMEditCSVOutput = "";
         private string _mEditCSVResult = "";
@@ -92,6 +93,8 @@ namespace StudioCore.MsbEditor
         public static bool HideReferenceRowsPreference = false;
         public static bool HideEnumsPreference = false;
         public static bool AllowFieldReorderPreference = true;
+
+        public static bool EditorMode = false;
 
         internal bool _isSearchBarActive = false;
         private bool _isMEditPopupOpen = false;
@@ -142,20 +145,43 @@ namespace StudioCore.MsbEditor
                         EditorActionManager.ExecuteAction(act);
                     }
                 }
-                if (FeatureFlags.EnableEnhancedParamEditor)
+                if (ImGui.MenuItem("Mass Edit", null, false, true))
                 {
-                    if (ImGui.MenuItem("Mass Edit", null, false, true))
-                    {
-                        EditorCommandQueue.AddCommand($@"param/menu/massEditRegex");
-                    }
-                    if (ImGui.MenuItem("Export CSV", null, false, _activeView._selection.paramSelectionExists()))
-                    {
+                    EditorCommandQueue.AddCommand($@"param/menu/massEditRegex");
+                }
+                if (ImGui.BeginMenu("Export CSV", _activeView._selection.paramSelectionExists()))
+                {
+                    if (ImGui.MenuItem("All", null, false,  _activeView._selection.paramSelectionExists()))
                         EditorCommandQueue.AddCommand($@"param/menu/massEditCSVExport");
-                    }
-                    if (ImGui.MenuItem("Import CSV", null, false, _activeView._selection.paramSelectionExists()))
+                    if (ImGui.MenuItem("Name", null, false,  _activeView._selection.paramSelectionExists()))
+                        EditorCommandQueue.AddCommand($@"param/menu/massEditSingleCSVExport/Name");
+                    if (ImGui.BeginMenu("Field"))
                     {
-                        EditorCommandQueue.AddCommand($@"param/menu/massEditCSVImport");
+                        foreach (PARAMDEF.Field field in ParamBank.Params[_activeView._selection.getActiveParam()].AppliedParamdef.Fields)
+                        {
+                            if (ImGui.MenuItem(field.DisplayName))
+                                EditorCommandQueue.AddCommand($@"param/menu/massEditSingleCSVExport/{field.InternalName}");
+                        }
+                        ImGui.EndMenu();
                     }
+                    ImGui.EndMenu();
+                }
+                if (ImGui.BeginMenu("Import CSV", _activeView._selection.paramSelectionExists()))
+                {
+                    if (ImGui.MenuItem("All", null, false,  _activeView._selection.paramSelectionExists()))
+                        EditorCommandQueue.AddCommand($@"param/menu/massEditCSVImport");
+                    if (ImGui.MenuItem("Name", null, false,  _activeView._selection.paramSelectionExists()))
+                        EditorCommandQueue.AddCommand($@"param/menu/massEditSingleCSVImport/Name");
+                    if (ImGui.BeginMenu("Field"))
+                    {
+                        foreach (PARAMDEF.Field field in ParamBank.Params[_activeView._selection.getActiveParam()].AppliedParamdef.Fields)
+                        {
+                            if (ImGui.MenuItem(field.DisplayName))
+                                EditorCommandQueue.AddCommand($@"param/menu/massEditSingleCSVImport/{field.InternalName}");
+                        }
+                        ImGui.EndMenu();
+                    }
+                    ImGui.EndMenu();
                 }
                 ImGui.EndMenu();
             }
@@ -169,29 +195,35 @@ namespace StudioCore.MsbEditor
                 {
                     RemoveView(_activeView);
                 }
-                if (ImGui.MenuItem("Show alternate field names", null, ShowAltNamesPreference)){
+                if (ImGui.MenuItem("Show alternate field names", null, ShowAltNamesPreference))
                     ShowAltNamesPreference = !ShowAltNamesPreference;
-                }
-                if (ImGui.MenuItem("Always show original field names", null, AlwaysShowOriginalNamePreference)){
+                if (ImGui.MenuItem("Always show original field names", null, AlwaysShowOriginalNamePreference))
                     AlwaysShowOriginalNamePreference = !AlwaysShowOriginalNamePreference;
-                }
-                if (ImGui.MenuItem("Hide field references", null, HideReferenceRowsPreference)){
+                if (ImGui.MenuItem("Hide field references", null, HideReferenceRowsPreference))
                     HideReferenceRowsPreference = !HideReferenceRowsPreference;
-                }
-                if (ImGui.MenuItem("Hide field enums", null, HideEnumsPreference)){
+                if (ImGui.MenuItem("Hide field enums", null, HideEnumsPreference))
                     HideEnumsPreference = !HideEnumsPreference;
-                }
-                if (ImGui.MenuItem("Allow field reordering", null, AllowFieldReorderPreference)){
+                if (ImGui.MenuItem("Allow field reordering", null, AllowFieldReorderPreference))
                     AllowFieldReorderPreference = !AllowFieldReorderPreference;
+                if (!EditorMode && ImGui.MenuItem("Editor Mode", null, EditorMode))
+                    EditorMode = true;
+                if (EditorMode && ImGui.BeginMenu("Editor Mode"))
+                {
+                    if (ImGui.MenuItem("Save Changes"))
+                    {
+                        ParamMetaData.SaveAll();
+                        EditorMode = false;
+                    }
+                    if (ImGui.MenuItem("Discard Changes"))
+                        EditorMode = false;
+                    ImGui.EndMenu();
                 }
                 ImGui.EndMenu();
             }
         }
 
-        public void OpenMassEditPopup(string popup, string massEditText)
+        public void OpenMassEditPopup(string popup)
         {
-            if (massEditText != null)
-                _currentMEditRegexInput = massEditText;
             ImGui.OpenPopup(popup);
             _isMEditPopupOpen = true;
         }
@@ -202,7 +234,7 @@ namespace StudioCore.MsbEditor
             if (ImGui.BeginPopup("massEditMenuRegex"))
             {
                 ImGui.Text("param PARAM: id VALUE: FIELD: = VALUE;");
-                UIHints.AddImGuiHintButton("MassEditHint", UIHints.MassEditHint);
+                UIHints.AddImGuiHintButton("MassEditHint", ref UIHints.MassEditHint);
                 ImGui.InputTextMultiline("MEditRegexInput", ref _currentMEditRegexInput, 65536, new Vector2(1024, 256));
                 if (ImGui.Selectable("Submit", false, ImGuiSelectableFlags.DontClosePopups))
                 {
@@ -223,17 +255,30 @@ namespace StudioCore.MsbEditor
                 ImGui.InputTextMultiline("MEditOutput", ref _currentMEditCSVOutput, 65536, new Vector2(1024,256), ImGuiInputTextFlags.ReadOnly);
                 ImGui.EndPopup();
             }
+            else if (ImGui.BeginPopup("massEditMenuSingleCSVExport"))
+            {
+                ImGui.Text(_currentMEditSingleCSVField);
+                ImGui.InputTextMultiline("MEditOutput", ref _currentMEditCSVOutput, 65536, new Vector2(1024,256), ImGuiInputTextFlags.ReadOnly);
+                ImGui.EndPopup();
+            }
             else if (ImGui.BeginPopup("massEditMenuCSVImport"))
             {
                 ImGui.InputTextMultiline("MEditRegexInput", ref _currentMEditCSVInput, 256 * 65536, new Vector2(1024, 256));
                 if (ImGui.Selectable("Submit", false, ImGuiSelectableFlags.DontClosePopups))
                 {
                     MassEditResult r = MassParamEditCSV.PerformMassEdit(_currentMEditCSVInput, EditorActionManager, _activeView._selection.getActiveParam());
-                    if (r.Type == MassEditResultType.SUCCESS)
-                    {
-                        _lastMEditRegexInput = _currentMEditRegexInput;
-                        _currentMEditRegexInput = "";
-                    }
+                    _mEditCSVResult = r.Information;
+                }
+                ImGui.Text(_mEditCSVResult);
+                ImGui.EndPopup();
+            }
+            else if (ImGui.BeginPopup("massEditMenuSingleCSVImport"))
+            {
+                ImGui.Text(_currentMEditSingleCSVField);
+                ImGui.InputTextMultiline("MEditRegexInput", ref _currentMEditCSVInput, 256 * 65536, new Vector2(1024, 256));
+                if (ImGui.Selectable("Submit", false, ImGuiSelectableFlags.DontClosePopups))
+                {
+                    MassEditResult r = MassParamEditCSV.PerformSingleMassEdit(_currentMEditCSVInput, EditorActionManager, _activeView._selection.getActiveParam(), _currentMEditSingleCSVField, false);
                     _mEditCSVResult = r.Information;
                 }
                 ImGui.Text(_mEditCSVResult);
@@ -373,17 +418,30 @@ namespace StudioCore.MsbEditor
                 {
                     if (initcmd[1] == "massEditRegex")
                     {
-                        OpenMassEditPopup("massEditMenuRegex", initcmd.Length > 2 ? initcmd[2] : null);
+                        _currentMEditRegexInput = initcmd.Length > 2 ? initcmd[2] : null;
+                        OpenMassEditPopup("massEditMenuRegex");
                     }
                     else if (initcmd[1] == "massEditCSVExport")
                     {
                         if (_activeView._selection.rowSelectionExists())
                             _currentMEditCSVOutput = MassParamEditCSV.GenerateCSV(_activeView._selection.getSelectedRows());
-                        OpenMassEditPopup("massEditMenuCSVExport", null);
+                        OpenMassEditPopup("massEditMenuCSVExport");
                     }
                     else if (initcmd[1] == "massEditCSVImport")
                     {
-                        OpenMassEditPopup("massEditMenuCSVImport", null);
+                        OpenMassEditPopup("massEditMenuCSVImport");
+                    }
+                    else if (initcmd[1] == "massEditSingleCSVExport" && initcmd.Length > 2)
+                    {
+                        _currentMEditSingleCSVField = initcmd[2];
+                        if (_activeView._selection.rowSelectionExists())
+                            _currentMEditCSVOutput = MassParamEditCSV.GenerateSingleCSV(_activeView._selection.getSelectedRows(), _currentMEditSingleCSVField);
+                        OpenMassEditPopup("massEditMenuSingleCSVExport");
+                    }
+                    else if (initcmd[1] == "massEditSingleCSVImport" && initcmd.Length > 2)
+                    {
+                        _currentMEditSingleCSVField = initcmd[2];
+                        OpenMassEditPopup("massEditMenuSingleCSVImport");
                     }
                 }
             }
@@ -669,16 +727,13 @@ namespace StudioCore.MsbEditor
             }
             else
             {
-                if (FeatureFlags.EnableEnhancedParamEditor)
-                {
-                    ImGui.Text("id VALUE | name ROW | prop FIELD VALUE | propref FIELD ROW");
-                    UIHints.AddImGuiHintButton("MassEditHint", UIHints.SearchBarHint);
-                    ImGui.InputText("Search rows...", ref _selection.getCurrentSearchString(), 256);
-                    if(ImGui.IsItemActive())
-                        _paramEditor._isSearchBarActive = true;
-                    else
-                        _paramEditor._isSearchBarActive = false;
-                }
+                ImGui.Text("id VALUE | name ROW | prop FIELD VALUE | propref FIELD ROW");
+                UIHints.AddImGuiHintButton("MassEditHint", ref UIHints.SearchBarHint);
+                ImGui.InputText("Search rows...", ref _selection.getCurrentSearchString(), 256);
+                if(ImGui.IsItemActive())
+                    _paramEditor._isSearchBarActive = true;
+                else
+                    _paramEditor._isSearchBarActive = false;
                 ImGui.BeginChild("rows"+_selection.getActiveParam());
                 IParamDecorator decorator = null;
                 if (_paramEditor._decorators.ContainsKey(_selection.getActiveParam()))
@@ -688,21 +743,14 @@ namespace StudioCore.MsbEditor
 
                 PARAM para = ParamBank.Params[_selection.getActiveParam()];
                 List<PARAM.Row> p;
-                if (FeatureFlags.EnableEnhancedParamEditor)
+                Match m = new Regex(MassParamEditRegex.rowfilterRx).Match(_selection.getCurrentSearchString());
+                if (!m.Success)
                 {
-                    Match m = new Regex(MassParamEditRegex.rowfilterRx).Match(_selection.getCurrentSearchString());
-                    if (!m.Success)
-                    {
-                        p = para.Rows;
-                    }
-                    else
-                    {
-                        p = MassParamEditRegex.GetMatchingParamRows(para, m, true, true);
-                    }
+                    p = para.Rows;
                 }
                 else
                 {
-                    p = para.Rows;
+                    p = MassParamEditRegex.GetMatchingParamRows(para, m, true, true);
                 }
 
                 scrollTo = 0;

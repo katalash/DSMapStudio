@@ -54,7 +54,7 @@ namespace StudioCore.MsbEditor
             {
                 long val = (long)oldval;
                 string strval = $@"{val}";
-                if (ImGui.InputText("##value", ref strval, 40))
+                if (ImGui.InputText("##value", ref strval, 128))
                 {
                     var res = long.TryParse(strval, out val);
                     if (res)
@@ -386,28 +386,29 @@ namespace StudioCore.MsbEditor
         // Many parameter options, which may be simplified.
         private void PropEditorPropInfoRow(object rowOrWrappedObject, PropertyInfo prop, string visualName, ref int id, Entity nullableSelection)
         {
-            PropEditorPropRow(prop.GetValue(rowOrWrappedObject), ref id, visualName, null, prop.PropertyType, null, null, prop, rowOrWrappedObject, nullableSelection);
+            PropEditorPropRow(prop.GetValue(rowOrWrappedObject), ref id, visualName, null, prop.PropertyType, prop, rowOrWrappedObject, nullableSelection);
         }
         private void PropEditorPropCellRow(PARAM.Cell cell, ref int id, Entity nullableSelection)
         {
-            PropEditorPropRow(cell.Value, ref id, cell.Def.InternalName, FieldMetaData.Get(cell.Def), cell.Value.GetType(), null, cell.Def.InternalName, cell.GetType().GetProperty("Value"), cell, nullableSelection);
+            PropEditorPropRow(cell.Value, ref id, cell.Def.InternalName, FieldMetaData.Get(cell.Def), cell.Value.GetType(), cell.GetType().GetProperty("Value"), cell, nullableSelection);
         }
-        private void PropEditorPropRow(object oldval, ref int id, string visualName, FieldMetaData cellMeta, Type propType, Entity nullableEntity, string nullableName, PropertyInfo proprow, object paramRowOrCell, Entity nullableSelection)
+        private void PropEditorPropRow(object oldval, ref int id, string internalName, FieldMetaData cellMeta, Type propType, PropertyInfo proprow, object cellOrWrappedObject, Entity nullableSelection)
         {
             List<string> RefTypes = cellMeta == null ? null : cellMeta.RefTypes;
             string VirtualRef = cellMeta == null ? null : cellMeta.VirtualRef;
             ParamEnum Enum = cellMeta == null ? null : cellMeta.EnumType;
-            string AltName = cellMeta == null ? null : cellMeta.AltName;
             string Wiki = cellMeta == null ? null : cellMeta.Wiki;
             bool IsBool = cellMeta == null ? false : cellMeta.IsBool;
             object newval = null;
             ImGui.PushID(id);
             ImGui.AlignTextToFramePadding();
-            string printedName = (AltName != null && ParamEditorScreen.ShowAltNamesPreference) ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{visualName} ({AltName})" : $"{AltName}*") : visualName;
-            ImGui.TextUnformatted(printedName);
-            PropertyRowNameContextMenu(visualName);
+            PropertyRowName(ref internalName, cellMeta);
+            PropertyRowNameContextMenu(internalName, cellMeta);
             if (Wiki != null)
-                UIHints.AddImGuiHintButton(visualName, Wiki);
+            {
+                if (UIHints.AddImGuiHintButton(internalName, ref Wiki))
+                    cellMeta.Wiki = Wiki;
+            }
             if (ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null)
                 ImGui.TextColored(new Vector4(1.0f, 1.0f, 0.0f, 1.0f), @$"  <{String.Join(',', RefTypes)}>");
             if (ParamEditorScreen.HideEnumsPreference == false && Enum != null)
@@ -417,17 +418,17 @@ namespace StudioCore.MsbEditor
             ImGui.SetNextItemWidth(-1);
             bool changed = false;
 
-            bool matchDefault = paramRowOrCell.GetType() == typeof(PARAM.Cell) && ((PARAM.Cell)paramRowOrCell).Def.Default.Equals(oldval);
+            bool matchDefault = cellOrWrappedObject != null && cellOrWrappedObject is PARAM.Cell && ((PARAM.Cell) cellOrWrappedObject).Def.Default.Equals(oldval);
             if (matchDefault)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.75f, 0.75f, 0.75f, 1.0f));
             else if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null)
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.5f, 1.0f, 1.0f));
 
-            changed = PropertyRow(propType, oldval, out newval, IsBool, nullableEntity, nullableName);
+            changed = PropertyRow(propType, oldval, out newval, IsBool);
             bool committed = ImGui.IsItemDeactivatedAfterEdit();
             if ((ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null) || (ParamEditorScreen.HideEnumsPreference == false && Enum != null) || VirtualRef != null || matchDefault)
                 ImGui.PopStyleColor();
-            PropertyRowValueContextMenu(visualName, VirtualRef, oldval);
+            PropertyRowValueContextMenu(internalName, VirtualRef, oldval);
 
             if (ParamEditorScreen.HideReferenceRowsPreference == false && RefTypes != null)
                 PropertyRowRefs(RefTypes, oldval);
@@ -439,10 +440,37 @@ namespace StudioCore.MsbEditor
                 committed = true;
             }
 
-            UpdateProperty(proprow, nullableSelection, paramRowOrCell, newval, changed, committed, false, false);
+            UpdateProperty(proprow, nullableSelection, cellOrWrappedObject, newval, changed, committed, false, false);
             ImGui.NextColumn();
             ImGui.PopID();
             id++;
+        }
+
+        private void PropertyRowName(ref string internalName, FieldMetaData cellMeta)
+        {
+            string AltName = cellMeta == null ? null : cellMeta.AltName;
+            if (cellMeta != null && ParamEditorScreen.EditorMode)
+            {
+                if (AltName != null)
+                {
+                    ImGui.InputText("", ref AltName, 128);
+                    if (ImGui.IsItemDeactivatedAfterEdit())
+                        cellMeta.AltName = AltName;
+                }
+                else
+                {
+                    ImGui.InputText("", ref internalName, 128);
+                    if (ImGui.IsItemDeactivatedAfterEdit())
+                        cellMeta.AltName = internalName;
+                }
+                if (cellMeta.AltName != null && (cellMeta.AltName.Equals(internalName) || cellMeta.AltName.Equals("")))
+                    cellMeta.AltName = null;
+            }
+            else
+            {
+                string printedName = (AltName != null && ParamEditorScreen.ShowAltNamesPreference) ? (ParamEditorScreen.AlwaysShowOriginalNamePreference ? $"{internalName} ({AltName})" : $"{AltName}*") : internalName;
+                ImGui.TextUnformatted(printedName);
+            }
         }
         
         private void PropertyRowRefs(List<string> reftypes, dynamic oldval)
@@ -492,7 +520,7 @@ namespace StudioCore.MsbEditor
                 ImGui.TextColored(new Vector4(0.0f, 0.0f, 0.0f, 1.0f), "___");
             }
         }
-        private void PropertyRowNameContextMenu(string originalName)
+        private void PropertyRowNameContextMenu(string originalName, FieldMetaData cellMeta)
         {
             if (ImGui.BeginPopupContextItem("rowName"))
             {
@@ -500,10 +528,46 @@ namespace StudioCore.MsbEditor
                     ImGui.Text(originalName);
                 if (ImGui.Selectable("Search..."))
                     EditorCommandQueue.AddCommand($@"param/search/prop {originalName.Replace(" ", "\\s")} ");
+                if (ParamEditorScreen.EditorMode && cellMeta != null)
+                {
+                    if (ImGui.BeginMenu("Add Reference"))
+                    {
+                        foreach (string p in ParamBank.Params.Keys)
+                        {
+                            if (ImGui.Selectable(p))
+                            {
+                                if (cellMeta.RefTypes == null)
+                                    cellMeta.RefTypes = new List<string>();
+                                cellMeta.RefTypes.Add(p);
+                            }
+                        }
+                        ImGui.EndMenu();
+                    }
+                    if (cellMeta.RefTypes != null && ImGui.BeginMenu("Remove Reference"))
+                    {
+                        foreach (string p in cellMeta.RefTypes)
+                        {
+                            if (ImGui.Selectable(p))
+                            {
+                                cellMeta.RefTypes.Remove(p);
+                                if (cellMeta.RefTypes.Count == 0)
+                                    cellMeta.RefTypes = null;
+                                break;
+                            }
+                        }
+                        ImGui.EndMenu();
+                    }
+                    if (ImGui.Selectable(cellMeta.IsBool ? "Remove bool toggle" : "Add bool toggle"))
+                        cellMeta.IsBool = !cellMeta.IsBool;
+                    if (cellMeta.Wiki == null && ImGui.Selectable("Add wiki..."))
+                        cellMeta.Wiki = "Empty wiki...";
+                    if (cellMeta.Wiki != null && ImGui.Selectable("Remove wiki"))
+                        cellMeta.Wiki = null;
+                }
                 ImGui.EndPopup();
             }
         }
-        private void PropertyRowValueContextMenu(string visualName, string VirtualRef, object oldval)
+        private void PropertyRowValueContextMenu(string visualName, string VirtualRef, dynamic oldval)
         {
             if (ImGui.BeginPopupContextItem("quickMEdit"))
             {
@@ -513,6 +577,17 @@ namespace StudioCore.MsbEditor
                 }
                 if (VirtualRef != null)
                     PropertyRowVirtualRefContextItems(VirtualRef, oldval);
+                if (ParamEditorScreen.EditorMode && ImGui.BeginMenu("Find rows with this value..."))
+                {
+                    foreach(KeyValuePair<string, PARAM> p in ParamBank.Params)
+                    {
+                        int v = (int)oldval;
+                        PARAM.Row r = p.Value[v];
+                        if (r != null && ImGui.Selectable($@"{p.Key}: {(r.Name != null ? r.Name : "null")}"))
+                            EditorCommandQueue.AddCommand($@"param/select/-1/{p.Key}/{v}");
+                    }
+                    ImGui.EndMenu();
+                }
                 ImGui.EndPopup();
             }
         }
@@ -713,7 +788,7 @@ namespace StudioCore.MsbEditor
                 ImGui.EndPopup();
             }
         }
-
+        
         private void PropEditorFlverLayout(Entity selection, FLVER2.BufferLayout layout)
         {
             foreach (var l in layout)
