@@ -79,7 +79,7 @@ namespace StudioCore.MsbEditor
                 else if (cell.Value.GetType() == typeof(double))
                     return PerformBasicOperation<double>(cell, op, double.Parse(opparam));
             }
-            catch(FormatException f)
+            catch
             {
             }
             return null;
@@ -91,7 +91,6 @@ namespace StudioCore.MsbEditor
             {
                 dynamic val = c.Value;
                 dynamic opp = opparam;
-                Type type;
                 if (op.Equals("="))
                     return (T) (opp);
                 else if (op.Equals("+"))
@@ -103,7 +102,7 @@ namespace StudioCore.MsbEditor
                 else if (op.Equals("/"))
                     return (T) (val / opp);
             }
-            catch(Exception e)
+            catch
             {
                 // Operation error
             }
@@ -129,7 +128,7 @@ namespace StudioCore.MsbEditor
         // eg "correctFaith: "
         private static readonly string fieldRx = $@"(?<fieldrx>[^\:]+):\s+";
         // eg "* 2;
-        private static readonly string operationRx = $@"(?<op>=|\+|-|\*|/|ref)\s+(?<opparam>[^;]+);";
+        private static readonly string operationRx = $@"(?<op>=|\+|-|\*|/|ref)\s+(?<fieldtype>field\s+)?(?<opparam>[^;]+);";
 
         private static readonly Regex commandRx = new Regex($@"^({paramrowfilterselection}|({paramfilterRx}{rowfilterRx}:\s+)){fieldRx}{operationRx}$");
 
@@ -146,6 +145,7 @@ namespace StudioCore.MsbEditor
                     Group paramrx = comm.Groups["paramrx"];
                     Regex fieldRx = new Regex($@"^{comm.Groups["fieldrx"].Value}$");
                     string op = comm.Groups["op"].Value;
+                    bool isopparamField = comm.Groups["fieldtype"].Success;
                     string opparam = comm.Groups["opparam"].Value;
                     
                     List<PARAM> affectedParams = new List<PARAM>();
@@ -162,17 +162,33 @@ namespace StudioCore.MsbEditor
                         else
                             affectedRows.AddRange(GetMatchingParamRows(param, comm, false, false));
                     }
-
-                    List<PARAM.Cell> affectedCells = GetMatchingCells(affectedRows, fieldRx);
-                    changeCount += affectedCells.Count;
-                    foreach (PARAM.Cell cell in affectedCells)
+                    foreach (PARAM.Row row in affectedRows)
                     {
-                        object newval = PerformOperation(cell, op, opparam);
-                        if (newval == null)
+                        List<PARAM.Cell> affectedCells = GetMatchingCells(row, fieldRx);
+                        string opparamcontext = opparam;
+                        if (isopparamField)
                         {
-                            return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not perform operation {op} {opparam} on field {cell.Def.DisplayName}");
+                            foreach (PARAM.Cell cell in row.Cells)
+                            {
+                                if (cell.Def.InternalName.Equals(opparam))
+                                {
+                                    opparamcontext = cell.Value.ToString();
+                                    break;
+                                }
+                            }
+                            if (opparamcontext.Equals(opparam))
+                                return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not look up field {opparam} in row {row.Name}");
                         }
-                        actions.Add(new PropertiesChangedAction(cell.GetType().GetProperty("Value"), -1, cell, newval));
+                        changeCount += affectedCells.Count;
+                        foreach (PARAM.Cell cell in affectedCells)
+                        {
+                            object newval = PerformOperation(cell, op, opparamcontext);
+                            if (newval == null)
+                            {
+                                return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not perform operation {op} {opparamcontext} on field {cell.Def.DisplayName}");
+                            }
+                            actions.Add(new PropertiesChangedAction(cell.GetType().GetProperty("Value"), -1, cell, newval));
+                        }
                     }
                 }
                 else
@@ -210,7 +226,7 @@ namespace StudioCore.MsbEditor
             else if (rowpropfield.Success)
                 return GetMatchingParamRowsByPropVal(param, rowpropfield.Value, command.Groups["rowpropvalexp"].Value, lenient, failureAllOrNone);
             else if (rowpropreffield.Success)
-                return GetMatchingParamRowsByPropRef(param, rowpropreffield.Value, $@"^{command.Groups["rowproprefnamerx"].Value}$", lenient, failureAllOrNone);
+                return GetMatchingParamRowsByPropRef(param, rowpropreffield.Value, command.Groups["rowproprefnamerx"].Value, lenient, failureAllOrNone);
             else
                 return failureAllOrNone ? param.Rows : new List<PARAM.Row>();
         }
@@ -220,11 +236,11 @@ namespace StudioCore.MsbEditor
             List<PARAM.Row> rlist = new List<PARAM.Row>();
             try
             {
-                Regex rx = new Regex(rowvalexp);
+                Regex rx = lenient? new Regex($@".*{rowvalexp}.*") : new Regex(rowvalexp);
                 foreach (PARAM.Row row in param.Rows)
                 {
-                    string term = lenient ? $@".*{row.ID.ToString()}.*" : row.ID.ToString();
-                    if (rx.Match(term).Success)
+                    string term = row.ID.ToString();
+                    if (rx.Match(lenient ? term.ToLower() : term).Success)
                         rlist.Add(row);
                 }
                 return rlist;
@@ -260,12 +276,12 @@ namespace StudioCore.MsbEditor
             List<PARAM.Row> rlist = new List<PARAM.Row>();
             try
             {
-                Regex rx = new Regex(rowvalexp);
+                Regex rx = lenient ? new Regex($@".*{rowvalexp.ToLower()}.*") : new Regex(rowvalexp);
                 foreach (PARAM.Row row in param.Rows)
                 {
-                    PARAM.Cell c = row[rowfield];
-                    string term = lenient ? $@".*{c.Value.ToString()}.*" : c.Value.ToString();
-                    if (c != null && rx.Match(term).Success)
+                    PARAM.Cell c = row[rowfield.Replace(@"\s", " ")];
+                    string term = c.Value.ToString();
+                    if (c != null && rx.Match(lenient ? term.ToLower() : term).Success)
                         rlist.Add(row);
                 }
                 return rlist;
@@ -284,21 +300,22 @@ namespace StudioCore.MsbEditor
                 Regex rownamerx = lenient ? new Regex($@".*{namerx.ToLower()}.*") : new Regex(namerx);
                 foreach (PARAM.Row row in param.Rows)
                 {
-                    PARAM.Cell c = row[rowfield];
-                    if (c != null)
+                    PARAM.Cell c = row[rowfield.Replace(@"\s", " ")];
+                    if (c == null)
+                        continue;
+                    int val = (int) c.Value;
+                    foreach (string rt in FieldMetaData.Get(c.Def).RefTypes)
                     {
-                        int val = (int) c.Value;
-                        foreach (string rt in FieldMetaData.Get(c.Def).RefTypes)
+                        if (!ParamBank.Params.ContainsKey(rt))
+                            continue;
+                        PARAM.Row r = ParamBank.Params[rt][val];
+                        if (r==null)
+                            continue;
+                        string nameToMatch = r.Name == null ? "" : r.Name;
+                        if (r != null && rownamerx.Match(lenient ? nameToMatch.ToLower() : nameToMatch).Success)
                         {
-                            if (!ParamBank.Params.ContainsKey(rt))
-                                continue;
-                            PARAM.Row r = ParamBank.Params[rt][val];
-                            string nameToMatch = r.Name == null ? "" : r.Name;
-                            if (r != null && rownamerx.Match(lenient ? nameToMatch.ToLower() : nameToMatch).Success)
-                            {
-                                rlist.Add(row);
-                                break;
-                            }
+                            rlist.Add(row);
+                            break;
                         }
                     }
                 }
@@ -310,17 +327,14 @@ namespace StudioCore.MsbEditor
             }
         }
 
-        public static List<PARAM.Cell> GetMatchingCells(List<PARAM.Row> rows, Regex fieldrx)
+        public static List<PARAM.Cell> GetMatchingCells(PARAM.Row row, Regex fieldrx)
         {
             List<PARAM.Cell> clist = new List<PARAM.Cell>();
-            foreach (PARAM.Row row in rows)
+            foreach (PARAM.Cell c in row.Cells)
             {
-                foreach (PARAM.Cell c in row.Cells)
+                if (fieldrx.Match(c.Def.DisplayName).Success)
                 {
-                    if (fieldrx.Match(c.Def.DisplayName).Success)
-                    {
-                        clist.Add(c);
-                    }
+                    clist.Add(c);
                 }
             }
             return clist;
@@ -329,15 +343,31 @@ namespace StudioCore.MsbEditor
 
     public class MassParamEditCSV : MassParamEdit
     {
-        public static string GenerateCSV(PARAM param)
+        public static string GenerateCSV(List<PARAM.Row> rows)
         {
             string gen = "";
-            foreach (PARAM.Row row in param.Rows)
+            foreach (PARAM.Row row in rows)
             {
                 string rowgen = $@"{row.ID},{row.Name}";
                 foreach (PARAM.Cell cell in row.Cells)
                 {
                     rowgen += $@",{cell.Value}";
+                }
+                gen += rowgen + "\n";
+            }
+            return gen;
+        }
+        public static string GenerateSingleCSV(List<PARAM.Row> rows, string field)
+        {
+            string gen = "";
+            foreach (PARAM.Row row in rows)
+            {
+                string rowgen;
+                if (field.Equals("Name"))
+                    rowgen = $@"{row.ID},{row.Name}";
+                else
+                {
+                    rowgen = $@"{row.ID},{row[field].Value}";
                 }
                 gen += rowgen + "\n";
             }
@@ -398,7 +428,61 @@ namespace StudioCore.MsbEditor
                     actionManager.ExecuteAction(new CompoundAction(actions));
                 return new MassEditResult(MassEditResultType.SUCCESS, $@"{changeCount} cells affected, {addedCount} rows added");
             }
-            catch(FormatException e)
+            catch
+            {
+                return new MassEditResult(MassEditResultType.PARSEERROR, "Unable to parse CSV into correct data types");
+            }
+        }
+        public static MassEditResult PerformSingleMassEdit(string csvString, ActionManager actionManager, string param, string field, bool useSpace)
+        {
+            try
+            {
+                PARAM p = ParamBank.Params[param];
+                if (p == null)
+                    return new MassEditResult(MassEditResultType.PARSEERROR, "No Param selected");
+                string[] csvLines = csvString.Split('\n');
+                int changeCount = 0;
+                List<Action> actions = new List<Action>();
+                foreach (string csvLine in csvLines)
+                {
+                    if (csvLine.Trim().Equals(""))
+                        continue;
+                    string[] csvs = csvLine.Split(useSpace ? ' ' : ',', 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (csvs.Length != 2)
+                        return new MassEditResult(MassEditResultType.PARSEERROR, "CSV has wrong number of values");
+                    int id = int.Parse(csvs[0]);
+                    string value = csvs[1];
+                    PARAM.Row row = p[id];
+                    if (row == null)
+                        return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not locate row {id}");
+                    if (field.Equals("Name"))
+                    {
+                        if (row.Name == null || !row.Name.Equals(value))
+                            actions.Add(new PropertiesChangedAction(row.GetType().GetProperty("Name"), -1, row, value));
+                    }
+                    else
+                    {
+                        PARAM.Cell cell = row[field];
+                        if (cell == null)
+                        {
+                            return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not locate field {field}");
+                        }
+                        // Array types are unhandled
+                        if (cell.Value.GetType().IsArray)
+                            continue;
+                        object newval = PerformOperation(cell, "=", value);
+                        if (newval == null)
+                            return new MassEditResult(MassEditResultType.OPERATIONERROR, $@"Could not assign {value} to field {cell.Def.DisplayName}");
+                        if (!cell.Value.Equals(newval))
+                            actions.Add(new PropertiesChangedAction(cell.GetType().GetProperty("Value"), -1, cell, newval));
+                    }
+                }
+                changeCount = actions.Count;
+                if (changeCount != 0)
+                    actionManager.ExecuteAction(new CompoundAction(actions));
+                return new MassEditResult(MassEditResultType.SUCCESS, $@"{changeCount} rows affected");
+            }
+            catch
             {
                 return new MassEditResult(MassEditResultType.PARSEERROR, "Unable to parse CSV into correct data types");
             }
