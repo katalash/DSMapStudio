@@ -176,7 +176,7 @@ namespace StudioCore.Gui
                 var s = ImGui.GetWindowSize();
                 var newvp = new Veldrid.Rectangle((int)p.X, (int)p.Y + 3, (int)s.X, (int)s.Y - 3);
                 ResizeViewport(_device, newvp);
-                if (InputTracker.GetMouseButtonDown(MouseButton.Right) && MouseInViewport())
+                if ((InputTracker.GetMouseButtonDown(MouseButton.Right) || InputTracker.GetMouseButtonDown(MouseButton.Middle)) && MouseInViewport())
                 {
                     ImGui.SetWindowFocus();
                 }
@@ -307,6 +307,8 @@ namespace StudioCore.Gui
             var pos = box.GetCenter();
             var radius = Vector3.Distance(box.Max, box.Min);
             _worldView.CameraTransform.Position = pos - (camdir * radius);
+            _worldView.OrbitCamCenter = pos;
+            _worldView.OrbitCamDistance = Math.Max(radius , _worldView.SHITTY_CAM_ZOOM_MIN_DIST);
         }
     }
 }
